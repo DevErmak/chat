@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 type Props = {};
 export const Chat: React.FC<any> = ({}: Props) => {
   const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState([{ username: 'sd', message: 'freeBSD' }]);
+  const [messages, setMessages] = useState([{ nickName: 'sd', message: 'freeBSD' }]);
   const [socket, setSocket] = useState(io('http://localhost:4000'));
   const [username, setUsername] = useState('');
   useEffect(() => {
@@ -16,6 +16,7 @@ export const Chat: React.FC<any> = ({}: Props) => {
     setSocket(newSocket);
 
     newSocket.on('chat message', (msg) => {
+      console.log('---------------->msg', msg);
       setMessages((prevMessages) => [...prevMessages, msg]);
     });
 
@@ -31,7 +32,7 @@ export const Chat: React.FC<any> = ({}: Props) => {
   const handleSendMessage = (e: any) => {
     e.preventDefault();
     if (message.trim() && username.trim()) {
-      socket.emit('chat message', { username, message });
+      socket.emit('chat message', { userId: 1, roomId: 1, message });
       setMessage('');
     }
   };
@@ -40,7 +41,7 @@ export const Chat: React.FC<any> = ({}: Props) => {
       <ul>
         {messages.map((msg, i) => (
           <li key={i}>
-            <strong>{msg.username}: </strong>
+            <strong>{msg.nickName}: </strong>
             {msg.message}
           </li>
         ))}
