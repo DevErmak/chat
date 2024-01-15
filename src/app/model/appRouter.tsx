@@ -1,6 +1,6 @@
 import { Chat } from '@/pages/chat';
-import { ChatList } from '@/pages/chat-list';
 import { Home } from '@/pages/home';
+import { Rooms } from '@/pages/rooms';
 import { UserList } from '@/pages/user-list';
 import { createBrowserRouter } from 'react-router-dom';
 
@@ -11,12 +11,12 @@ export const appRouter = () =>
       element: <Home />,
     },
     {
-      path: '/message/:chatID',
+      path: '/rooms/:chatID',
       element: <Chat />,
     },
     {
-      path: '/message',
-      element: <ChatList />,
+      path: '/rooms',
+      element: <Rooms />,
     },
     {
       path: '/users',
