@@ -1,0 +1,23 @@
+.button {
+  display: inline-block;
+  outline: none;
+  cursor: pointer;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+.button_icon {
+  border-radius: 80px;
+}
+.button_outline {
+  background-color: transparent;
+  outline: none;
+}
+.button_primary {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.button_lg {
+  width: 64px;
+  height: 64px;
+}

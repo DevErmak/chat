@@ -7,6 +7,8 @@ export interface IUserState {
 }
 
 export interface IUserDataServer {
-  nickName: string;
-  id: number;
+  user_id: number;
+  nickname: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
