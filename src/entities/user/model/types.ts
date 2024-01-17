@@ -3,7 +3,7 @@ export interface IUserState {
   id: number;
   isLoading: boolean;
   setUserInfo: (nickName: string, id: number) => void;
-  clearMe: (id: number) => void;
+  clearMe: () => void;
 }
 
 export interface IUserDataServer {

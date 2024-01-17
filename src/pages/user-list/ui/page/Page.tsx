@@ -1,20 +1,37 @@
 import { Button, Typography } from '@/shared/ui';
 import './page.scss';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { IUserDataServer } from '@/entities/user/model/types';
-import cn from 'classnames';
 import { useNavigate } from 'react-router-dom';
 import { axiosServerChat } from '@/shared/api/v1';
+import classNames from 'classnames';
+import { useUserStore } from '@/entities/user';
+import { useCookies } from 'react-cookie';
 
 type Props = {};
 export const UserList: React.FC<any> = ({}: Props) => {
+  const userInfo = useUserStore((state) => {
+    return { nickName: state.nickName, userId: state.id };
+  });
   const [users, setUsers] = useState([]);
-  const [dirtyUsers, setDirtyUsers] = useState<number[]>([]);
+  const [dirtyUsers, setDirtyUsers] = useState<number[]>([userInfo.userId]);
   const navigate = useNavigate();
+  const [cookie, setCookie] = useCookies(['token']);
 
-  useEffect(() => {
-    axios.get('http://localhost:4000/users').then((res) => setUsers(res.data));
+  useLayoutEffect(() => {
+    async function getUsers() {
+      try {
+        const res = await axiosServerChat.post('/users', {
+          token: cookie.token,
+        });
+        console.log('---------------->asdqweqwe', res.data);
+        setUsers(res.data);
+      } catch {
+        setUsers([]);
+      }
+    }
+    getUsers();
   }, []);
 
   const handleUserClick = (userId: number) => {
@@ -40,7 +57,7 @@ export const UserList: React.FC<any> = ({}: Props) => {
             type="text-md"
             key={i}
             onClick={() => handleUserClick(data.user_id)}
-            className={['user', dirtyUsers.includes(data.user_id) ? 'user-select' : '']}
+            className={classNames({ user: true, select: dirtyUsers.includes(data.user_id) })}
           >
             {data.nickname}
           </Typography>
@@ -49,7 +66,7 @@ export const UserList: React.FC<any> = ({}: Props) => {
       <Button
         type="primary"
         onClick={handleCreateRoomClick}
-        className={['button-create-room', dirtyUsers.length ? 'button-create-room-active' : '']}
+        className={classNames({ 'button-create-room': true, active: dirtyUsers.length > 1 })}
       >
         <Typography type="text-md" className={'write'}>
           написать

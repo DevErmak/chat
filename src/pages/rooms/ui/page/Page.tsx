@@ -4,6 +4,7 @@ import { axiosServerChat } from '@/shared/api/v1';
 import { useUserStore } from '@/entities/user';
 import { useRoomStore } from '@/entities/room/model/roomStore';
 import homerGif from '@/shared/images/homer.gif';
+import { useCookies } from 'react-cookie';
 
 type Props = {};
 export const Rooms: React.FC<any> = ({}: Props) => {
