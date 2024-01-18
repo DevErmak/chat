@@ -41,8 +41,7 @@ export const appRouter = () =>
       element: <DefaultLayout />,
       children: [
         {
-          path: '/rooms/:chatID',
-
+          path: '/rooms/:roomId',
           element: (
             <GuestGuard>
               <Chat />

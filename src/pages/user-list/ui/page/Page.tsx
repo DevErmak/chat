@@ -1,7 +1,6 @@
 import { Button, Typography } from '@/shared/ui';
 import './page.scss';
-import axios from 'axios';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { IUserDataServer } from '@/entities/user/model/types';
 import { useNavigate } from 'react-router-dom';
 import { axiosServerChat } from '@/shared/api/v1';
@@ -32,7 +31,7 @@ export const UserList: React.FC<any> = ({}: Props) => {
       }
     }
     getUsers();
-  }, []);
+  }, [userInfo]);
 
   const handleUserClick = (userId: number) => {
     if (dirtyUsers.includes(userId)) {

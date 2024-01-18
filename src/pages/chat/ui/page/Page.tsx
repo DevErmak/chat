@@ -3,21 +3,43 @@ import './page.scss';
 
 import io from 'socket.io-client';
 import { useEffect, useState } from 'react';
+import { useUserStore } from '@/entities/user';
+import { useMessageStore } from '@/entities/message';
+import { useCookies } from 'react-cookie';
 
 type Props = {};
 export const Chat: React.FC<any> = ({}: Props) => {
   const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState([{ nickName: 'sd', message: 'freeBSD' }]);
+
+  const messages = useMessageStore((state) => state.message);
+  const setMessages = useMessageStore((state) => state.setMessages);
+  const addMessages = useMessageStore((state) => state.addMessages);
+
+  // const [messages, setMessages] = useState([{ nickName: 'sd', message: 'freeBSD' }]);
   const [socket, setSocket] = useState(io('http://localhost:4000'));
-  const [username, setUsername] = useState('');
+  const [cookie, setCookie] = useCookies(['token']);
+
+  const { roomId } = useParams();
+  console.log('---------------->roomId', roomId);
+  const userInfo = useUserStore((state) => {
+    return { nickName: state.nickName, userId: state.id };
+  });
+
   useEffect(() => {
     const newSocket = io('http://localhost:4000');
 
     setSocket(newSocket);
 
-    newSocket.on('chat message', (msg) => {
-      console.log('---------------->msg', msg);
-      setMessages((prevMessages) => [...prevMessages, msg]);
+    newSocket.emit('get prev message', { roomId });
+
+    newSocket.on('get prev message', (msg) => {
+      console.log('---------------->!!!msg', msg);
+      setMessages(msg);
+    });
+
+    newSocket.on('sent message', (msg) => {
+      console.log('--------------qwemsg', msg);
+      addMessages(msg);
     });
 
     return () => {
@@ -31,28 +53,22 @@ export const Chat: React.FC<any> = ({}: Props) => {
 
   const handleSendMessage = (e: any) => {
     e.preventDefault();
-    if (message.trim() && username.trim()) {
-      socket.emit('chat message', { userId: 1, roomId: 1, message });
+    console.log('---------------->ssss');
+    if (message.trim()) {
+      console.log('---------------->aassss');
+      socket.emit('sent message', { token: cookie.token, roomId: roomId, message });
       setMessage('');
     }
   };
+  console.log('---------------->messagesqwqwe', messages);
   return (
     <div className="chat-page">
       <ul>
         {messages.map((msg, i) => (
-          <li key={i}>
-            <strong>{msg.nickName}: </strong>
-            {msg.message}
-          </li>
+          <li key={i}>{msg.text}</li>
         ))}
       </ul>
       <form onSubmit={handleSendMessage}>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="enter/create a username"
-        />
         <input
           type="text"
           value={message}
