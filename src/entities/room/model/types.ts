@@ -1,10 +1,12 @@
 export interface IRoomsState {
-  rooms: Array<number>;
+  rooms: Array<IRoomDataServer>;
   isLoading: boolean;
-  setRooms: (idRooms: Array<number>) => void;
-  removeRoom: (id: number) => void;
+  setRooms: (rooms: Array<IRoomDataServer>) => void;
+  addRoom: (room: IRoomDataServer) => void;
+  removeRoom: (room: IRoomDataServer) => void;
 }
 
 export interface IRoomDataServer {
   id: number;
+  nameRoom: string;
 }

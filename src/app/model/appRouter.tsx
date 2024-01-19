@@ -56,14 +56,14 @@ export const appRouter = () =>
             </GuestGuard>
           ),
         },
-        {
-          path: '/users',
-          element: (
-            <GuestGuard>
-              <UserList />
-            </GuestGuard>
-          ),
-        },
+        // {
+        //   path: '/users',
+        //   element: (
+        //     <GuestGuard>
+        //       <UserList />
+        //     </GuestGuard>
+        //   ),
+        // },
       ],
     },
   ]);

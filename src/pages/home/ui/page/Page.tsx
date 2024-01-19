@@ -5,7 +5,6 @@ import { useUserStore } from '@/entities/user';
 import { axiosServerChat } from '@/shared/api/v1';
 import { Typography } from '@/shared/ui';
 import { useCookies } from 'react-cookie';
-import { useLayoutEffect } from 'react';
 
 interface IFormInput {
   nickName: string;
@@ -14,7 +13,7 @@ interface IFormInput {
 type Props = {};
 export const Home: React.FC<any> = ({}: Props) => {
   const navigate = useNavigate();
-  const [cookie, setCookie] = useCookies(['token']);
+  const [cookie, setCookie] = useCookies(['token', 'session']);
   const setUserInfo = useUserStore((state) => state.setUserInfo);
   const { register, handleSubmit } = useForm<IFormInput>();
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
@@ -25,6 +24,7 @@ export const Home: React.FC<any> = ({}: Props) => {
       console.log('---------------->res.data', res.data);
       setUserInfo(res.data.nickName, res.data.userId);
       setCookie('token', res.data.token);
+      setCookie('session', res.data.userId);
       navigate('/rooms');
     } catch {
       return <Typography type="text-md">сервер не доступен</Typography>;

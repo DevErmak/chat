@@ -1,20 +1,24 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
-import { IRoomsState } from './types';
+import { IRoomDataServer, IRoomsState } from './types';
 
 export const useRoomStore = create<IRoomsState>()(
   devtools(
     immer((set) => ({
       rooms: [],
       isLoading: false,
-      setRooms: (idRooms) =>
+      setRooms: (rooms) =>
         set((state) => {
-          state.rooms = idRooms;
+          state.rooms = rooms;
         }),
-      removeRoom: (id) =>
+      addRoom: (room) =>
         set((state) => {
-          state.rooms = state.rooms.filter((roomsId) => roomsId !== id);
+          state.rooms.push(room);
+        }),
+      removeRoom: (room) =>
+        set((state) => {
+          state.rooms = state.rooms.filter((roomsId: IRoomDataServer) => roomsId.id !== room.id);
         }),
     })),
   ),
