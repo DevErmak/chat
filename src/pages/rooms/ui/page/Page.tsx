@@ -22,21 +22,21 @@ export const Rooms: React.FC<any> = ({}: Props) => {
   const [cookie, setCookie] = useCookies(['token']);
   const navigate = useNavigate();
 
-  // useLayoutEffect(() => {
-  async function getRooms() {
-    try {
-      const res = await axiosServerChat.get('/rooms');
-      if (res.data === 'not have room') {
+  useLayoutEffect(() => {
+    async function getRooms() {
+      try {
+        const res = await axiosServerChat.get('/rooms');
+        if (res.data === 'not have room') {
+          setRooms([]);
+        } else {
+          setRooms(res.data);
+        }
+      } catch {
         setRooms([]);
-      } else {
-        setRooms(res.data);
       }
-    } catch {
-      setRooms([]);
     }
-  }
-  getRooms();
-  // }, []);
+    getRooms();
+  }, []);
 
   const handleRoomClick = (roomId: number) => {
     navigate(`/rooms/${roomId}`);
