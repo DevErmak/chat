@@ -6,6 +6,11 @@ import { useEffect, useState } from 'react';
 import { useUserStore } from '@/entities/user';
 import { useMessageStore } from '@/entities/message';
 import { useCookies } from 'react-cookie';
+import { SubmitHandler, useForm } from 'react-hook-form';
+
+interface IFormInput {
+  message: string;
+}
 
 type Props = {};
 export const Chat: React.FC<any> = ({}: Props) => {
@@ -25,19 +30,29 @@ export const Chat: React.FC<any> = ({}: Props) => {
     return { nickName: state.nickName, userId: state.id };
   });
 
+  const { register, handleSubmit, reset } = useForm<IFormInput>();
+  const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+    if (data.message.trim()) {
+      console.log('---------------->aassss cookie.token', cookie.token);
+      socket.emit('send message', { token: cookie.token, roomId: roomId, message: data.message });
+      reset();
+    }
+  };
+
   useEffect(() => {
     const newSocket = io('http://localhost:4000');
 
     setSocket(newSocket);
-
+    console.log('---------------->qqqwww');
     newSocket.emit('get prev message', { roomId });
 
     newSocket.on('get prev message', (msg) => {
       console.log('---------------->!!!msg', msg);
       setMessages(msg);
+      console.log('---------------->222messages', messages);
     });
 
-    newSocket.on('sent message', (msg) => {
+    newSocket.on('send message', (msg) => {
       console.log('--------------qwemsg', msg);
       addMessages(msg);
     });
@@ -47,19 +62,15 @@ export const Chat: React.FC<any> = ({}: Props) => {
     };
   }, []);
 
-  const handleMessageChange = (e: any) => {
-    setMessage(e.target.value);
-  };
-
-  const handleSendMessage = (e: any) => {
-    e.preventDefault();
-    console.log('---------------->ssss');
-    if (message.trim()) {
-      console.log('---------------->aassss');
-      socket.emit('sent message', { token: cookie.token, roomId: roomId, message });
-      setMessage('');
-    }
-  };
+  // const handleSendMessage = (e: any) => {
+  //   e.preventDefault();
+  //   console.log('---------------->ssss');
+  //   if (message.trim()) {
+  //     console.log('---------------->aassss cookie.token', cookie.token);
+  //     socket.emit('send message', { token: cookie.token, roomId: roomId, message });
+  //     setMessage('');
+  //   }
+  // };
   console.log('---------------->messagesqwqwe', messages);
   return (
     <div className="chat-page">
@@ -68,14 +79,9 @@ export const Chat: React.FC<any> = ({}: Props) => {
           <li key={i}>{msg.text}</li>
         ))}
       </ul>
-      <form onSubmit={handleSendMessage}>
-        <input
-          type="text"
-          value={message}
-          onChange={handleMessageChange}
-          placeholder="Start typing the message"
-        />
-        <button type="submit">Send Message</button>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <input {...register('message')} />
+        <button type="submit">send message</button>
       </form>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useLayoutEffect } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import './page.scss';
 import { axiosServerChat } from '@/shared/api/v1';
 import { useUserStore } from '@/entities/user';
@@ -8,6 +8,7 @@ import { useRoomStore } from '@/entities/room';
 import { Button, Typography } from '@/shared/ui';
 import { useNavigate } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { io } from 'socket.io-client';
 interface IFormInput {
   roomName: string;
 }
@@ -22,20 +23,51 @@ export const Rooms: React.FC<any> = ({}: Props) => {
   const [cookie, setCookie] = useCookies(['token']);
   const navigate = useNavigate();
 
-  useLayoutEffect(() => {
-    async function getRooms() {
-      try {
-        const res = await axiosServerChat.get('/rooms');
-        if (res.data === 'not have room') {
-          setRooms([]);
-        } else {
-          setRooms(res.data);
-        }
-      } catch {
+  const [socket, setSocket] = useState(io('http://localhost:4000'));
+
+  // useLayoutEffect(() => {
+  //   async function getRooms() {
+  //     try {
+  //       const res = await axiosServerChat.get('/rooms');
+  //       if (res.data === 'not have room') {
+  //         setRooms([]);
+  //       } else {
+  //         setRooms(res.data);
+  //       }
+  //     } catch {
+  //       setRooms([]);
+  //     }
+  //   }
+  //   getRooms();
+  // }, []);
+
+  useEffect(() => {
+    const newSocket = io('http://localhost:4000');
+
+    setSocket(newSocket);
+    console.log('---------------->qqq');
+    newSocket.emit('get rooms');
+
+    console.log('---------------->wqqq');
+    newSocket.on('get rooms', (data) => {
+      console.log('---------------->!!!msg', data);
+      if (data === 'not have room') {
         setRooms([]);
+        console.log('---------------->!!!msssg', rooms);
+      } else {
+        setRooms(data);
       }
-    }
-    getRooms();
+      console.log('---------------->wsqqq');
+    });
+
+    newSocket.on('add room', (room) => {
+      console.log('--------------qwemsg', room);
+      addRoom(room);
+    });
+
+    return () => {
+      newSocket.disconnect();
+    };
   }, []);
 
   const handleRoomClick = (roomId: number) => {
@@ -45,15 +77,12 @@ export const Rooms: React.FC<any> = ({}: Props) => {
   const { register, handleSubmit } = useForm<IFormInput>();
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    try {
-      const res = await axiosServerChat.post('/createRoom', {
-        roomName: data.roomName,
-      });
-      console.log('---------------->res.data', res.data);
-      addRoom(res.data);
-    } catch {
-      return <Typography type="text-md">комната не создана</Typography>;
-    }
+    socket.emit('add room', { token: cookie.token, roomName: data.roomName });
+    // const res = await axiosServerChat.post('/createRoom', {
+    //   roomName: data.roomName,
+    // });
+    // console.log('---------------->res.data', res.data);
+    // addRoom(res.data);
   };
 
   console.log('---------------->es', rooms);
@@ -75,9 +104,9 @@ export const Rooms: React.FC<any> = ({}: Props) => {
           <button type="submit">добавить комнату</button>
         </form>
         <div>
-          {rooms.map((data: any, i) => (
-            <Typography type="text-md" key={i} onClick={() => handleRoomClick(data.room_id)}>
-              {data.room_id}
+          {rooms.map((room: any, i) => (
+            <Typography type="text-md" key={i} onClick={() => handleRoomClick(room.id)}>
+              {room.name}
             </Typography>
           ))}
         </div>
