@@ -7,8 +7,9 @@ import { useUserStore } from '@/entities/user';
 import { useMessageStore } from '@/entities/message';
 import { useCookies } from 'react-cookie';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { axiosServerChat } from '@/shared/api/v1';
 
-const MicRecorder = require('mic-recorder-to-mp3');
+// const MicRecorder = require('mic-recorder-to-mp3');
 
 // import { MicRecorder  from 'mic-recorder-to-mp3';
 // import {
@@ -129,67 +130,152 @@ export const Chat: React.FC<any> = ({}: Props) => {
   // };
   console.log('---------------->messagesqwqwe', messages);
 
-  const [permission, setPermission] = useState(false);
-  const mediaRecorder = useRef(null);
-  const [recordingStatus, setRecordingStatus] = useState('inactive');
-  const [stream, setStream] = useState(null);
-  const [audioChunks, setAudioChunks] = useState([]);
-  const [audio, setAudio] = useState(null);
+  // const [permission, setPermission] = useState(false);
+  // const mediaRecorder = useRef(null);
+  // const [recordingStatus, setRecordingStatus] = useState('inactive');
+  // const [stream, setStream] = useState(null);
+  // const [audioChunks, setAudioChunks] = useState([]);
+  // const [audio, setAudio] = useState(null);
 
-  const mimeType = 'audio/webm';
+  // const mimeType = 'audio/webm';
 
-  const startRecording = async () => {
-    setRecordingStatus('recording');
-    //create new Media recorder instance using the stream
-    const media = new MediaRecorder(stream, { type: mimeType });
-    //set the MediaRecorder instance to the mediaRecorder ref
-    mediaRecorder.current = media;
-    //invokes the start method to start the recording process
-    mediaRecorder.current.start();
-    let localAudioChunks = [];
-    mediaRecorder.current.ondataavailable = (event) => {
-      if (typeof event.data === 'undefined') return;
-      if (event.data.size === 0) return;
-      localAudioChunks.push(event.data);
-    };
-    setAudioChunks(localAudioChunks);
+  // const startRecording = async () => {
+  //   setRecordingStatus('recording');
+  //   //create new Media recorder instance using the stream
+  //   const media = new MediaRecorder(stream, { type: mimeType });
+  //   //set the MediaRecorder instance to the mediaRecorder ref
+  //   mediaRecorder.current = media;
+  //   //invokes the start method to start the recording process
+  //   mediaRecorder.current.start();
+  //   let localAudioChunks = [];
+  //   mediaRecorder.current.ondataavailable = (event) => {
+  //     if (typeof event.data === 'undefined') return;
+  //     if (event.data.size === 0) return;
+  //     localAudioChunks.push(event.data);
+  //   };
+  //   setAudioChunks(localAudioChunks);
+  // };
+
+  // const stopRecording = () => {
+  //   setRecordingStatus('inactive');
+  //   //stops the recording instance
+  //   mediaRecorder.current.stop();
+  //   mediaRecorder.current.onstop = () => {
+  //     //creates a blob file from the audiochunks data
+  //     const audioBlob = new Blob(audioChunks, { type: mimeType });
+  //     //creates a playable URL from the blob file.
+  //     const audioUrl = URL.createObjectURL(audioBlob);
+  //     setAudio(audioUrl);
+  //     setAudioChunks([]);
+  //   };
+  // };
+
+  // const [permission, setPermission] = useState(false);
+  // const [stream, setStream] = useState(null);
+
+  // const getMicrophonePermission = async () => {
+  //   if ('MediaRecorder' in window) {
+  //     try {
+  //       const streamData = await navigator.mediaDevices.getUserMedia({
+  //         audio: true,
+  //         video: false,
+  //       });
+  //       setPermission(true);
+  //       setStream(streamData);
+  //     } catch (err) {
+  //       alert(err.message);
+  //     }
+  //   } else {
+  //     alert('The MediaRecorder API is not supported in your browser.');
+  //   }
+  // };
+
+  const [recording, setRecording] = useState(false);
+  const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+
+  const handleStartRecording = () => {
+    navigator.mediaDevices
+      .getUserMedia({ audio: true })
+      .then((stream) => {
+        const mediaRecorder = new MediaRecorder(stream);
+        mediaRecorderRef.current = mediaRecorder;
+
+        const chunks: BlobPart[] = [];
+        mediaRecorder.ondataavailable = (e) => {
+          if (e.data.size > 0) {
+            chunks.push(e.data);
+          }
+        };
+
+        mediaRecorder.onstop = () => {
+          const audioBlob = new Blob(chunks, { type: 'audio/webm' });
+          setAudioBlob(audioBlob);
+        };
+
+        mediaRecorder.start();
+        setRecording(true);
+      })
+      .catch((error) => {
+        console.error('Error accessing audio stream:', error);
+      });
   };
 
-  const stopRecording = () => {
-    setRecordingStatus('inactive');
-    //stops the recording instance
-    mediaRecorder.current.stop();
-    mediaRecorder.current.onstop = () => {
-      //creates a blob file from the audiochunks data
-      const audioBlob = new Blob(audioChunks, { type: mimeType });
-      //creates a playable URL from the blob file.
-      const audioUrl = URL.createObjectURL(audioBlob);
-      setAudio(audioUrl);
-      setAudioChunks([]);
-    };
-  };
-
-  const [permission, setPermission] = useState(false);
-  const [stream, setStream] = useState(null);
-
-  const getMicrophonePermission = async () => {
-    if ('MediaRecorder' in window) {
-      try {
-        const streamData = await navigator.mediaDevices.getUserMedia({
-          audio: true,
-          video: false,
-        });
-        setPermission(true);
-        setStream(streamData);
-      } catch (err) {
-        alert(err.message);
-      }
-    } else {
-      alert('The MediaRecorder API is not supported in your browser.');
+  const handleStopRecording = () => {
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop();
+      setRecording(false);
     }
   };
+
+  const handlePlayAudio = () => {
+    if (audioBlob) {
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audioElement = new Audio(audioUrl);
+      audioElement.play();
+    }
+  };
+
+  const handleUploadAudio = () => {
+    if (audioBlob) {
+      console.log('---------------->audioBlob', audioBlob);
+      const formData = new FormData();
+      formData.append('audio', audioBlob, 'recording.wav');
+
+      console.log('---------------->formData', formData);
+      console.log('---------------->formData.getAll', formData.getAll('audio'));
+
+      axiosServerChat
+        .post('/audio', formData)
+        .then((response) => {
+          console.log('Audio uploaded successfully:', response.data);
+        })
+        .catch((error) => {
+          console.error('Error uploading audio:', error);
+        });
+    }
+  };
+
+  if (!navigator.mediaDevices.getUserMedia) {
+    return <div>Ваш браузер не поддерживает запись аудио</div>;
+  }
   return (
     <div className="chat-page">
+      <div>
+        {!recording ? (
+          <button onClick={handleStartRecording}>Start Recording</button>
+        ) : (
+          <button onClick={handleStopRecording}>Stop Recording</button>
+        )}
+
+        <button onClick={handlePlayAudio} disabled={!audioBlob}>
+          Play Audio
+        </button>
+        <button onClick={handleUploadAudio} disabled={!audioBlob}>
+          Upload Audio
+        </button>
+      </div>
+
       <ul>
         {messages.map((msg, i) => (
           <li key={i}>{msg.text}</li>
@@ -217,31 +303,6 @@ export const Chat: React.FC<any> = ({}: Props) => {
       {/* <button onClick={startRecord}>Start Recording</button> */}
       {/* <button onClick={stopRecord}>Stop Recording</button> */}
 
-      <div className="audio-controls">
-        {!permission ? (
-          <button onClick={getMicrophonePermission} type="button">
-            Get Microphone
-          </button>
-        ) : null}
-        {permission && recordingStatus === 'inactive' ? (
-          <button onClick={startRecording} type="button">
-            Start Recording
-          </button>
-        ) : null}
-        {recordingStatus === 'recording' ? (
-          <button onClick={stopRecording} type="button">
-            Stop Recording
-          </button>
-        ) : null}
-      </div>
-      {audio ? (
-        <div className="audio-container">
-          <audio src={audio} controls></audio>
-          <a download href={audio}>
-            Download Recording
-          </a>
-        </div>
-      ) : null}
       <form onSubmit={handleSubmit(onSubmit)}>
         <input {...register('message')} />
         <button type="submit">send message</button>
