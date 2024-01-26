@@ -6,7 +6,7 @@ export interface IMessageState {
   removeMessage: (message: IMessage) => void;
 }
 export interface IMessage {
-  text: string;
+  text: string | Blob;
   id: number;
   nickName: string;
 }

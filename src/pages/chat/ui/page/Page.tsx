@@ -8,6 +8,7 @@ import { useMessageStore } from '@/entities/message';
 import { useCookies } from 'react-cookie';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { axiosServerChat } from '@/shared/api/v1';
+import isBlob from 'is-blob';
 
 // const MicRecorder = require('mic-recorder-to-mp3');
 
@@ -83,9 +84,19 @@ export const Chat: React.FC<any> = ({}: Props) => {
 
   const { register, handleSubmit, reset } = useForm<IFormInput>();
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    if (data.message.trim()) {
+    if (data.message.trim() || isBlob(audioBlob)) {
       console.log('---------------->aassss cookie.token', cookie.token);
-      socket.emit('send message', { token: cookie.token, roomId: roomId, message: data.message });
+      console.log('---------------->123audioBlob', audioBlob);
+      console.log(
+        '----------------> audioBlob !== null ? audioBlob : data.message',
+        audioBlob !== null ? audioBlob : data.message,
+      );
+      socket.emit('send message', {
+        token: cookie.token,
+        roomId: roomId,
+        message: audioBlob !== null ? audioBlob : data.message,
+      });
+      setAudioBlob(null);
       reset();
     }
   };
@@ -113,6 +124,10 @@ export const Chat: React.FC<any> = ({}: Props) => {
       console.log('--------------qwemsg', msg);
       addMessages(msg);
     });
+    // newSocket.on('send voice message', (msg) => {
+    //   console.log('--------------qwemsg', msg);
+    //   addMessages(msg);
+    // });
 
     return () => {
       newSocket.disconnect();
@@ -228,33 +243,42 @@ export const Chat: React.FC<any> = ({}: Props) => {
     }
   };
 
-  const handlePlayAudio = () => {
-    if (audioBlob) {
-      const audioUrl = URL.createObjectURL(audioBlob);
-      const audioElement = new Audio(audioUrl);
-      audioElement.play();
-    }
+  const handlePlayAudio = (audioBlob: any) => {
+    console.log('---------------->assudioBlob', audioBlob);
+    const audioUrl = URL.createObjectURL(audioBlob);
+    const audioElement = new Audio(audioUrl);
+    audioElement.play();
   };
 
-  const handleUploadAudio = () => {
-    if (audioBlob) {
-      console.log('---------------->audioBlob', audioBlob);
-      const formData = new FormData();
-      formData.append('audio', audioBlob, 'recording.wav');
+  // const handleUploadAudio = () => {
+  //   if (audioBlob) {
+  //     console.log('---------------->audioBlob', audioBlob);
+  //     const formData = new FormData();
+  //     formData.append('audio', audioBlob, 'recording.wav');
 
-      console.log('---------------->formData', formData);
-      console.log('---------------->formData.getAll', formData.getAll('audio'));
+  //     console.log('---------------->formData', formData);
+  //     console.log('---------------->formData.getAll', formData.getAll('audio'));
 
-      axiosServerChat
-        .post('/audio', formData)
-        .then((response) => {
-          console.log('Audio uploaded successfully:', response.data);
-        })
-        .catch((error) => {
-          console.error('Error uploading audio:', error);
-        });
-    }
-  };
+  //     socket.emit('send voice message', {
+  //       token: cookie.token,
+  //       roomId: roomId,
+  //       message: audioBlob,
+  //     });
+
+  //     // axiosServerChat
+  //     //   .post('/audio', formData, {
+  //     //     headers: {
+  //     //       'Content-Type': 'multipart/form-data',
+  //     //     },
+  //     //   })
+  //     //   .then((response) => {
+  //     //     console.log('Audio uploaded successfully:', response.data);
+  //     //   })
+  //     //   .catch((error) => {
+  //     //     console.error('Error uploading audio:', error);
+  //     //   });
+  //   }
+  // };
 
   if (!navigator.mediaDevices.getUserMedia) {
     return <div>Ваш браузер не поддерживает запись аудио</div>;
@@ -268,17 +292,30 @@ export const Chat: React.FC<any> = ({}: Props) => {
           <button onClick={handleStopRecording}>Stop Recording</button>
         )}
 
-        <button onClick={handlePlayAudio} disabled={!audioBlob}>
-          Play Audio
-        </button>
-        <button onClick={handleUploadAudio} disabled={!audioBlob}>
+        {/* <button onClick={handleUploadAudio} disabled={!audioBlob}>
           Upload Audio
-        </button>
+        </button> */}
       </div>
 
       <ul>
         {messages.map((msg, i) => (
-          <li key={i}>{msg.text}</li>
+          <li key={i}>
+            {typeof msg.text === 'string' ? (
+              msg.text
+            ) : (
+              <button
+                onClick={() => {
+                  console.log('---------------->msg.text', msg.text);
+                  console.log('---------------->type*msg.text', isBlob(msg.text));
+                  const blob = new Blob([msg.text]);
+                  console.log('---------------->type*msg.text', isBlob(blob));
+                  return handlePlayAudio(blob);
+                }}
+              >
+                Play Audio
+              </button>
+            )}
+          </li>
         ))}
       </ul>
       {/* <p>{status}</p>
