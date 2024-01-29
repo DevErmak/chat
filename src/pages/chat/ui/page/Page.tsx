@@ -9,6 +9,8 @@ import { useCookies } from 'react-cookie';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { axiosServerChat } from '@/shared/api/v1';
 import isBlob from 'is-blob';
+import { AudioVisualizer, LiveAudioVisualizer } from 'react-audio-visualize';
+import isBuffer from 'is-buffer';
 
 // const MicRecorder = require('mic-recorder-to-mp3');
 
@@ -84,7 +86,7 @@ export const Chat: React.FC<any> = ({}: Props) => {
 
   const { register, handleSubmit, reset } = useForm<IFormInput>();
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    if (data.message.trim() || isBlob(audioBlob)) {
+    if (data.message.trim() || audioBlob !== null) {
       console.log('---------------->aassss cookie.token', cookie.token);
       console.log('---------------->123audioBlob', audioBlob);
       console.log(
@@ -113,6 +115,7 @@ export const Chat: React.FC<any> = ({}: Props) => {
     setSocket(newSocket);
     console.log('---------------->qqqwww');
     newSocket.emit('get prev message', { roomId });
+    console.log('---------------->qqqwww2');
 
     newSocket.on('get prev message', (msg) => {
       console.log('---------------->!!!msg', msg);
@@ -224,7 +227,7 @@ export const Chat: React.FC<any> = ({}: Props) => {
         };
 
         mediaRecorder.onstop = () => {
-          const audioBlob = new Blob(chunks, { type: 'audio/webm' });
+          const audioBlob = new Blob(chunks, { type: 'audio/wav' });
           setAudioBlob(audioBlob);
         };
 
@@ -243,10 +246,12 @@ export const Chat: React.FC<any> = ({}: Props) => {
     }
   };
 
-  const handlePlayAudio = (audioBlob: any) => {
+  const handlePlayAudio = (audioBlob: Blob) => {
     console.log('---------------->assudioBlob', audioBlob);
     const audioUrl = URL.createObjectURL(audioBlob);
+    console.log('---------------->audioUrl', audioUrl);
     const audioElement = new Audio(audioUrl);
+    console.log('---------------->audioElement', audioElement);
     audioElement.play();
   };
 
@@ -280,6 +285,8 @@ export const Chat: React.FC<any> = ({}: Props) => {
   //   }
   // };
 
+  const visualizerRef = useRef<HTMLCanvasElement>(null);
+
   if (!navigator.mediaDevices.getUserMedia) {
     return <div>Ваш браузер не поддерживает запись аудио</div>;
   }
@@ -289,7 +296,14 @@ export const Chat: React.FC<any> = ({}: Props) => {
         {!recording ? (
           <button onClick={handleStartRecording}>Start Recording</button>
         ) : (
-          <button onClick={handleStopRecording}>Stop Recording</button>
+          <div>
+            <button onClick={handleStopRecording}>Stop Recording</button>
+            <LiveAudioVisualizer
+              mediaRecorder={mediaRecorderRef.current as MediaRecorder}
+              width={200}
+              height={75}
+            />
+          </div>
         )}
 
         {/* <button onClick={handleUploadAudio} disabled={!audioBlob}>
@@ -298,25 +312,31 @@ export const Chat: React.FC<any> = ({}: Props) => {
       </div>
 
       <ul>
-        {messages.map((msg, i) => (
-          <li key={i}>
-            {typeof msg.text === 'string' ? (
-              msg.text
-            ) : (
-              <button
-                onClick={() => {
-                  console.log('---------------->msg.text', msg.text);
-                  console.log('---------------->type*msg.text', isBlob(msg.text));
-                  const blob = new Blob([msg.text]);
-                  console.log('---------------->type*msg.text', isBlob(blob));
-                  return handlePlayAudio(blob);
-                }}
-              >
-                Play Audio
-              </button>
-            )}
-          </li>
-        ))}
+        {messages.map((msg, i) => {
+          console.log('123---------------->msg.text', msg.text);
+          console.log('123---------------->isBuffer([msg.text])', isBuffer([msg.text]));
+          console.log('123---------------->isBuffer([msg.text])', typeof msg.text);
+          console.log('123---------------->isBuffer([msg.text])', typeof msg.text !== 'string');
+          if (typeof msg.text !== 'string') {
+            const blob = new Blob([msg.text], { type: 'audio/wav' });
+            console.log('---------------->blob', blob);
+            return (
+              <li key={i}>
+                <button onClick={() => handlePlayAudio(blob)}>Play Audio</button>
+                <AudioVisualizer
+                  ref={visualizerRef}
+                  blob={blob}
+                  width={150}
+                  height={60}
+                  barWidth={2}
+                  gap={1}
+                  barColor={'#abcdef'}
+                  barPlayedColor={'#8DA0B3'}
+                />
+              </li>
+            );
+          } else return <li key={i}> {msg.text as string} </li>;
+        })}
       </ul>
       {/* <p>{status}</p>
       <button onClick={startRecording}>Start Recording</button>

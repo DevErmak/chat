@@ -50,10 +50,10 @@ export const Rooms: React.FC<any> = ({}: Props) => {
 
     console.log('---------------->wqqq');
     newSocket.on('get rooms', (data) => {
-      console.log('---------------->!!!msg', data);
+      console.log('---------------->!!!rooms', data);
       if (data === 'not have room') {
         setRooms([]);
-        console.log('---------------->!!!msssg', rooms);
+        console.log('---------------->!!!noroom', rooms);
       } else {
         setRooms(data);
       }
