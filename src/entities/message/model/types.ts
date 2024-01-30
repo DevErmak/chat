@@ -9,4 +9,5 @@ export interface IMessage {
   text: string | Blob;
   id: number;
   nickName: string;
+  date: Date;
 }

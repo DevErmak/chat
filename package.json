@@ -13,6 +13,7 @@
     "@types/react-dom": "^18.0.0",
     "axios": "^1.6.5",
     "classnames": "^2.5.1",
+    "date-fns": "^3.3.1",
     "immer": "^10.0.3",
     "is-blob": "^3.0.0",
     "is-buffer": "^2.0.5",

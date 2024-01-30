@@ -1,40 +1,31 @@
 import React, { Ref } from 'react';
-import './button.scss';
+
+import './message.scss';
+
 import cn from 'classnames';
-type ButtonSizes = 'lg' | 'md' | 'sm';
 type type = 'text' | 'voice';
 
-interface IButtonProps {
+interface IMessageProps {
   children: React.ReactNode;
   type: type;
-  size?: ButtonSizes;
-  isSet?: boolean;
   className?: string | string[];
-  form?: string;
   onClick?: () => void;
-  buttonRef?: Ref<HTMLButtonElement & HTMLElement>;
+  MessageRef?: Ref<HTMLElement>;
 }
 
-export const Message: React.FC<IButtonProps> = ({
-  className,
-  type,
-  children,
-  onClick,
-  isSet,
-  form,
-  size,
-  buttonRef,
-}) => {
-  return (
-    <button
-      type={ButtonType}
-      className={cn('button', `button_${type}`, `button_${size}`, className)}
-      onClick={onClick}
-      disabled={disabled}
-      form={form}
-      ref={buttonRef}
-    >
-      {children}
-    </button>
-  );
+export const Message: React.FC<IMessageProps> = ({ className, type, children, onClick }) => {
+  switch (type) {
+    case 'text':
+      return (
+        <div className={cn('message', type, className)} onClick={onClick}>
+          {children}
+        </div>
+      );
+    case 'voice':
+      return (
+        <div className={cn('message', type, className)} onClick={onClick}>
+          {children}
+        </div>
+      );
+  }
 };
