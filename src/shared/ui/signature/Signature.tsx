@@ -38,40 +38,37 @@ export const Signature: React.FC<ISignatureProps> = ({
   classNameSender,
   classNameDate,
 }) => {
-  const [nowDate, setNowDate] = useState(new Date());
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      console.log('---------------->zxcqwe');
-      setNowDate(new Date());
-    }, 60000);
-
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [setNowDate]);
-
   const createFormatDate = (date: Date): React.ReactNode => {
-    let result;
-    console.log('---------------->date', date);
-    const currentDate = new Date(date);
-    const diffInMilliseconds = nowDate.getTime() - currentDate.getTime();
-    console.log('---------------->diffInMilliseconds', diffInMilliseconds);
-    if (diffInMilliseconds > 3 * 24 * 60 * 60 * 1000) {
-      result = format(date, 'ee.MM.Y', { locale: ru });
+    return format(date, 'HH:mm', { locale: ru });
+  };
+  const diffDay = (date: Date): React.ReactNode => {
+    let result = '';
+
+    const today = new Date();
+    const targetDate = new Date(date);
+
+    const roundedToday = new Date(
+      Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()),
+    );
+    const roundedTargetDate = new Date(
+      Date.UTC(targetDate.getUTCFullYear(), targetDate.getUTCMonth(), targetDate.getUTCDate()),
+    );
+
+    const daysDiff = Math.floor(
+      (roundedToday.getTime() - roundedTargetDate.getTime()) / (1000 * 60 * 60 * 24),
+    );
+
+    if (daysDiff === 0) {
+      result = '';
+    } else if (daysDiff === 1) {
+      result = 'Вчера';
+    } else if (daysDiff === 2) {
+      result = 'Позавчера';
     } else {
-      result = formatDistanceStrict(date, nowDate, { locale: ru });
-      // console.log('---------------->result', result);
-      // result = intervalToDuration({
-      //   start: date,
-      //   end: nowDate,
-      // });
-      // console.log('---------------->result', result);
-      // result = formatDuration(result);
-      // console.log('---------------->result2', result);
-      // result = format(subDays(diffInMilliseconds, 0), 'hh', { locale: ru });
+      result = format(date, 'ee.MM.Y', { locale: ru });
     }
-    return <Typography type={'text-sm'}>{result}</Typography>;
+
+    return result;
   };
 
   return (
@@ -80,7 +77,10 @@ export const Signature: React.FC<ISignatureProps> = ({
       <div className={cn('nameSender', classNameSender)}>
         <Typography type={'text-sm'}>{nameSender}</Typography>
       </div>
-      <div className={cn('date', classNameDate)}>{createFormatDate(date)}</div>
+      <div className={cn('date', classNameDate)}>
+        <Typography type={'text-sm'}>{createFormatDate(date)}</Typography>
+        <Typography type={'text-sm'}>{diffDay(date)}</Typography>
+      </div>
     </div>
   );
 };

@@ -12,6 +12,7 @@ import isBlob from 'is-blob';
 import { AudioVisualizer, LiveAudioVisualizer } from 'react-audio-visualize';
 import isBuffer from 'is-buffer';
 import { Message, Signature, Typography } from '@/shared/ui';
+import { Messages } from '@/widgets/messages';
 
 // const MicRecorder = require('mic-recorder-to-mp3');
 
@@ -28,18 +29,18 @@ interface IFormInput {
 
 type Props = {};
 export const Chat: React.FC<any> = ({}: Props) => {
-  const messages = useMessageStore((state) => state.message);
-  const setMessages = useMessageStore((state) => state.setMessages);
-  const addMessages = useMessageStore((state) => state.addMessages);
+  // const messages = useMessageStore((state) => state.message);
+  // const setMessages = useMessageStore((state) => state.setMessages);
+  // const addMessages = useMessageStore((state) => state.addMessages);
 
   const [socket, setSocket] = useState(io('http://localhost:4000'));
   const [cookie, setCookie] = useCookies(['token']);
 
   const { roomId } = useParams();
-  console.log('---------------->roomId', roomId);
-  const userInfo = useUserStore((state) => {
-    return { nickName: state.nickName, userId: state.id };
-  });
+  // console.log('---------------->roomId', roomId);
+  // const userInfo = useUserStore((state) => {
+  //   return { nickName: state.nickName, userId: state.id };
+  // });
 
   const { register, handleSubmit, reset } = useForm<IFormInput>();
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
@@ -60,31 +61,31 @@ export const Chat: React.FC<any> = ({}: Props) => {
     }
   };
 
-  useEffect(() => {
-    const newSocket = io('http://localhost:4000');
+  // useEffect(() => {
+  //   const newSocket = io('http://localhost:4000');
 
-    setSocket(newSocket);
-    console.log('---------------->qqqwww');
-    newSocket.emit('get prev message', { roomId });
-    console.log('---------------->qqqwww2');
+  //   setSocket(newSocket);
+  //   console.log('---------------->qqqwww');
+  //   newSocket.emit('get prev message', { roomId });
+  //   console.log('---------------->qqqwww2');
 
-    newSocket.on('get prev message', (msg) => {
-      console.log('---------------->!!!msg', msg);
-      setMessages(msg);
-      console.log('---------------->222messages', messages);
-    });
+  //   newSocket.on('get prev message', (msg) => {
+  //     console.log('---------------->!!!msg', msg);
+  //     setMessages(msg);
+  //     console.log('---------------->222messages', messages);
+  //   });
 
-    newSocket.on('send message', (msg) => {
-      console.log('--------------qwemsg', msg);
-      addMessages(msg);
-    });
+  //   newSocket.on('send message', (msg) => {
+  //     console.log('--------------qwemsg', msg);
+  //     addMessages(msg);
+  //   });
 
-    return () => {
-      newSocket.disconnect();
-    };
-  }, []);
+  //   return () => {
+  //     newSocket.disconnect();
+  //   };
+  // }, []);
 
-  console.log('---------------->messagesqwqwe', messages);
+  // console.log('---------------->messagesqwqwe', messages);
 
   const [recording, setRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
@@ -124,16 +125,16 @@ export const Chat: React.FC<any> = ({}: Props) => {
     }
   };
 
-  const handlePlayAudio = (audioBlob: Blob) => {
-    console.log('---------------->assudioBlob', audioBlob);
-    const audioUrl = URL.createObjectURL(audioBlob);
-    console.log('---------------->audioUrl', audioUrl);
-    const audioElement = new Audio(audioUrl);
-    console.log('---------------->audioElement', audioElement);
-    audioElement.play();
-  };
+  // const handlePlayAudio = (audioBlob: Blob) => {
+  //   console.log('---------------->assudioBlob', audioBlob);
+  //   const audioUrl = URL.createObjectURL(audioBlob);
+  //   console.log('---------------->audioUrl', audioUrl);
+  //   const audioElement = new Audio(audioUrl);
+  //   console.log('---------------->audioElement', audioElement);
+  //   audioElement.play();
+  // };
 
-  const visualizerRef = useRef<HTMLCanvasElement>(null);
+  // const visualizerRef = useRef<HTMLCanvasElement>(null);
 
   if (!navigator.mediaDevices.getUserMedia) {
     return <div>Ваш браузер не поддерживает запись аудио</div>;
@@ -154,42 +155,7 @@ export const Chat: React.FC<any> = ({}: Props) => {
           </div>
         )}
       </div>
-
-      <ul>
-        {messages.map((msg, i) => {
-          console.log('123---------------->msg.text', msg.text);
-          console.log('123---------------->isBuffer([msg.text])', isBuffer([msg.text]));
-          console.log('123---------------->isBuffer([msg.text])', typeof msg.text);
-          console.log('123---------------->isBuffer([msg.text])', typeof msg.text !== 'string');
-          if (typeof msg.text !== 'string') {
-            const blob = new Blob([msg.text], { type: 'audio/wav' });
-            console.log('---------------->blob', blob);
-            return (
-              <li key={i}>
-                <button onClick={() => handlePlayAudio(blob)}>Play Audio</button>
-                <AudioVisualizer
-                  ref={visualizerRef}
-                  blob={blob}
-                  width={150}
-                  height={60}
-                  barWidth={2}
-                  gap={1}
-                  barColor={'#abcdef'}
-                  barPlayedColor={'#8DA0B3'}
-                />
-              </li>
-            );
-          } else
-            return (
-              <Signature type={'default'} date={msg.date} nameSender={msg.nickName}>
-                <Message type="text">
-                  <Typography type="text-md">{msg.text}</Typography>
-                </Message>
-              </Signature>
-            );
-        })}
-      </ul>
-
+      <Messages />
       <form onSubmit={handleSubmit(onSubmit)}>
         <input {...register('message')} />
         <button type="submit">send message</button>
