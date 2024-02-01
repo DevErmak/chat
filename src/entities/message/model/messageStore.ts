@@ -12,18 +12,20 @@ export const useMessageStore = create<IMessageState>()(
       isLoading: false,
       setMessages: (message) =>
         set((state) => {
-          const aVoice: Array<Blob> = [];
-          const sortMessage = message.sort((a, b) => {
-            if (isBuffer(b.text)) {
-              aVoice.push(new Blob([b.text], { type: 'audio/wav' }));
+          console.log('---------------->messagestore', message);
+          const aVoice = message.map((msg) => {
+            if (isBuffer(msg.text)) {
+              console.log('---------------->q1wwqq');
+              return new Blob([msg.text], { type: 'audio/wav' });
             }
-            return new Date(a.date).getTime() - new Date(b.date).getTime();
           });
-          state.message = sortMessage;
-          state.voice = aVoice;
+          state.message = message;
+          console.log('---------------->aVoice', aVoice);
+          if (aVoice !== undefined) state.voice = aVoice as Blob[];
         }),
       addMessages: (message) =>
         set((state) => {
+          console.log('---------------->12422message', message);
           state.message.push(message);
           if (isBuffer(message.text)) {
             state.voice.push(new Blob([message.text], { type: 'audio/wav' }));

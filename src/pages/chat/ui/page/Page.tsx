@@ -44,6 +44,7 @@ export const Chat: React.FC<any> = ({}: Props) => {
 
   const { register, handleSubmit, reset } = useForm<IFormInput>();
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+    console.log('---------------->data.message.trim()', data.message.trim());
     if (data.message.trim() || audioBlob !== null) {
       console.log('---------------->aassss cookie.token', cookie.token);
       console.log('---------------->123audioBlob', audioBlob);
