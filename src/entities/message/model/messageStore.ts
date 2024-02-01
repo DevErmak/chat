@@ -2,7 +2,6 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import { IMessageState } from './types';
-import isBuffer from 'is-buffer';
 
 export const useMessageStore = create<IMessageState>()(
   devtools(
@@ -13,22 +12,17 @@ export const useMessageStore = create<IMessageState>()(
       setMessages: (message) =>
         set((state) => {
           console.log('---------------->messagestore', message);
-          const aVoice = message.map((msg) => {
-            if (isBuffer(msg.text)) {
-              console.log('---------------->q1wwqq');
-              return new Blob([msg.text], { type: 'audio/wav' });
-            }
-          });
+          const aVoice = message.filter((msg) => typeof msg.text !== 'string');
           state.message = message;
           console.log('---------------->aVoice', aVoice);
-          if (aVoice !== undefined) state.voice = aVoice as Blob[];
+          state.voice = aVoice;
         }),
       addMessages: (message) =>
         set((state) => {
           console.log('---------------->12422message', message);
           state.message.push(message);
-          if (isBuffer(message.text)) {
-            state.voice.push(new Blob([message.text], { type: 'audio/wav' }));
+          if (typeof message.text !== 'string') {
+            state.voice.push(message);
           }
         }),
       removeMessage: (message) =>

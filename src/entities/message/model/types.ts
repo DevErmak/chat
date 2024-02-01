@@ -1,6 +1,6 @@
 export interface IMessageState {
   message: Array<IMessage>;
-  voice: Blob[];
+  voice: Array<IMessage>;
   isLoading: boolean;
   setMessages: (message: Array<IMessage>) => void;
   addMessages: (message: IMessage) => void;
