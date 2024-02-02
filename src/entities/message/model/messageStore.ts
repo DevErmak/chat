@@ -17,9 +17,9 @@ export const useMessageStore = create<IMessageState>()(
         }),
       addMessages: (message) =>
         set((state) => {
-          state.message.push(message);
+          state.message.unshift(message);
           if (typeof message.text !== 'string') {
-            state.voice.push(message);
+            state.voice.unshift(message);
           }
         }),
       removeMessage: (message) =>

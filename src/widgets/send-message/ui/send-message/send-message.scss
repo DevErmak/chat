@@ -12,10 +12,11 @@
   resize: none;
   overflow-y: auto;
   height: 40px;
-  max-height: 80px;
+  max-height: 100px;
   padding: 8px;
   max-width: 500px;
   min-width: 300px;
+  outline: none;
 }
 .input-message::-webkit-scrollbar {
   width: 0px;
@@ -24,4 +25,21 @@
   display: flex;
   flex-direction: row;
   align-items: flex-end;
+  > .message {
+    display: contents;
+    &.voice {
+      border: none;
+      margin: 0px;
+      padding: 0px;
+      width: 300px;
+      min-width: 300px;
+      > .voice_visual {
+        width: 300px;
+        border-color: rgb(47 155 67);
+      }
+    }
+  }
+}
+.isRecord {
+  display: none;
 }

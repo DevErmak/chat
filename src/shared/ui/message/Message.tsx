@@ -20,6 +20,10 @@ interface IMessageProps {
   messageRef?: Ref<HTMLElement>;
   visualizerRef?: Ref<HTMLCanvasElement>;
   blob?: Blob;
+  audioWidth?: number;
+  audioHeight?: number;
+  barColor?: string;
+  barPlayedColor?: string;
 }
 
 export const Message: React.FC<IMessageProps> = ({
@@ -29,6 +33,10 @@ export const Message: React.FC<IMessageProps> = ({
   onClick,
   visualizerRef,
   blob,
+  audioWidth = 240,
+  audioHeight = 30,
+  barColor = '#abcdef',
+  barPlayedColor = '#8DA0B3',
 }) => {
   const [toggleSound, setToggleSound] = useState(true);
   switch (type) {
@@ -39,6 +47,7 @@ export const Message: React.FC<IMessageProps> = ({
         </div>
       );
     case 'voice':
+      console.log('---------------->!!!!blob', blob);
       const audioUrl = URL.createObjectURL(blob as Blob);
       const audioElement = new Audio(audioUrl);
 
@@ -71,12 +80,12 @@ export const Message: React.FC<IMessageProps> = ({
             <AudioVisualizer
               ref={visualizerRef}
               blob={blob as Blob}
-              width={250}
-              height={30}
+              width={audioWidth}
+              height={audioHeight}
               barWidth={2}
               gap={1}
-              barColor={'#abcdef'}
-              barPlayedColor={'#8DA0B3'}
+              barColor={barColor}
+              barPlayedColor={barPlayedColor}
             />
           </div>
         </div>
