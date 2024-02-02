@@ -1,0 +1,27 @@
+.input-message {
+  word-wrap: break-word;
+  box-sizing: border-box;
+  word-break: break-all;
+  font-family: 'PT Serif';
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  color: rgb(31 27 44);
+  border-radius: 3px;
+  resize: none;
+  overflow-y: auto;
+  height: 40px;
+  max-height: 80px;
+  padding: 8px;
+  max-width: 500px;
+  min-width: 300px;
+}
+.input-message::-webkit-scrollbar {
+  width: 0px;
+}
+.form-message {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+}

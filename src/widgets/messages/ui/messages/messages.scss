@@ -1,0 +1,10 @@
+.messages {
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  height: 80vh;
+  align-items: center;
+}
+.messages::-webkit-scrollbar {
+  width: 0px;
+}

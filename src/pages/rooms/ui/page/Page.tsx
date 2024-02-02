@@ -61,7 +61,7 @@ export const Rooms: React.FC<any> = ({}: Props) => {
     });
 
     newSocket.on('add room', (room) => {
-      console.log('--------------qwemsg', room);
+      console.log('--------------add room', room);
       addRoom(room);
     });
 

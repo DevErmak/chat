@@ -65,7 +65,7 @@ export const Signature: React.FC<ISignatureProps> = ({
     } else if (daysDiff === 2) {
       result = 'Позавчера';
     } else {
-      result = format(date, 'ee.MM.Y', { locale: ru });
+      result = format(date, 'dd.MM.yyyy', { locale: ru });
     }
 
     return result;

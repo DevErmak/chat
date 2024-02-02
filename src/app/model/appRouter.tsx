@@ -15,13 +15,10 @@ type GuestGuardProps = {
 function GuestGuard({ children }: GuestGuardProps) {
   const [cookie] = useCookies(['token']);
   const navigate = useNavigate();
-  console.log('---------------->cookUserId', cookie);
   const clearMe = useUserStore((state) => state.clearMe);
 
   useEffect(() => {
-    console.log('---------------->cookUas');
     if (!(cookie.hasOwnProperty('token') && cookie.token !== 'undefined')) {
-      console.log('---------------->asdasd');
       clearMe();
       navigate('/');
     }

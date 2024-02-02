@@ -5,31 +5,28 @@ import { useEffect, useRef, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { useParams } from 'react-router-dom';
 import { io } from 'socket.io-client';
+import cn from 'classnames';
+import './messages.scss';
 
 type Props = {};
-export const Messages: React.FC<any> = ({}: Props) => {
+
+interface IMessagesProps {
+  className?: string | string[];
+  onClick?: () => void;
+}
+export const Messages: React.FC<IMessagesProps> = ({ className, onClick }) => {
   const messages = useMessageStore((state) => state.message);
   const setMessages = useMessageStore((state) => state.setMessages);
   const addMessages = useMessageStore((state) => state.addMessages);
 
-  // const [socket, setSocket] = useState(io('http://localhost:4000'));
-  // const [cookie, setCookie] = useCookies(['token']);
   const { roomId } = useParams();
   const visualizerRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    // const socket = io('http://localhost:4000');
-
-    // setSocket(newSocket);
-    console.log('---------------->34qqqwww');
-    console.log('---------------->socket', socket);
     socket.emit('get prev message', { roomId });
-    console.log('---------------->qqqwww2');
 
     socket.on('get prev message', (msg) => {
-      console.log('---------------->!!!msg', msg);
       setMessages(msg);
-      console.log('---------------->222messages', messages);
     });
 
     socket.on('send message', (msg) => {
@@ -37,15 +34,16 @@ export const Messages: React.FC<any> = ({}: Props) => {
       addMessages(msg);
     });
 
+    console.log('--------------q');
+
     // return () => {
     //   socket.disconnect();
     // };
   }, []);
-  console.log('---------------->messagesww', messages);
 
   return (
-    <div>
-      {messages.map((msg, i) => {
+    <div className={cn('messages', className)} onClick={onClick}>
+      {messages.map((msg) => {
         if (typeof msg.text !== 'string') {
           const blob = new Blob([msg.text], { type: 'audio/wav' });
           return (
