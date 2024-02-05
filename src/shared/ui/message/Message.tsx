@@ -24,6 +24,7 @@ interface IMessageProps {
   audioHeight?: number;
   barColor?: string;
   barPlayedColor?: string;
+  sizeIcon?: number;
 }
 
 export const Message: React.FC<IMessageProps> = ({
@@ -37,6 +38,7 @@ export const Message: React.FC<IMessageProps> = ({
   audioHeight = 30,
   barColor = '#abcdef',
   barPlayedColor = '#8DA0B3',
+  sizeIcon = 25,
 }) => {
   const [toggleSound, setToggleSound] = useState(true);
   switch (type) {
@@ -62,7 +64,7 @@ export const Message: React.FC<IMessageProps> = ({
                 audioElement.play();
               }}
             >
-              <IoPlayOutline size={25} />
+              <IoPlayOutline size={sizeIcon} />
             </Button>
           ) : (
             <Button
@@ -73,7 +75,7 @@ export const Message: React.FC<IMessageProps> = ({
                 audioElement.pause();
               }}
             >
-              <HiOutlinePause size={25} />
+              <HiOutlinePause size={sizeIcon} />
             </Button>
           )}
           <div className={'voice_visual'}>
