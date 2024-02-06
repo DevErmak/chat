@@ -1,19 +1,9 @@
-import { useParams } from 'react-router-dom';
 import './page.scss';
 
-import io from 'socket.io-client';
-import { useEffect, useRef, useState } from 'react';
-import { useUserStore } from '@/entities/user';
-import { useMessageStore } from '@/entities/message';
-import { useCookies } from 'react-cookie';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { axiosServerChat } from '@/shared/api/v1';
-import isBlob from 'is-blob';
-import { AudioVisualizer, LiveAudioVisualizer } from 'react-audio-visualize';
-import isBuffer from 'is-buffer';
-import { Message, Signature, Typography } from '@/shared/ui';
 import { Messages } from '@/widgets/messages';
-import { SendMessage } from '@/widgets/send-message/ui/send-message/SendMessage';
+import { NameRoom } from '@/widgets/name-room';
+import { SendMessage } from '@/widgets/send-message';
+import { UserList } from '@/widgets/user-list';
 
 // const MicRecorder = require('mic-recorder-to-mp3');
 
@@ -35,6 +25,8 @@ export const Chat: React.FC<any> = ({}: Props) => {
   }
   return (
     <div className="chat-page">
+      <NameRoom sizeIcon={20} />
+      <UserList />
       <Messages className={'chat-page'} />
       <SendMessage className={'chat-page'} />
     </div>

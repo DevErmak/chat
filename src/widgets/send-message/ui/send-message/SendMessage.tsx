@@ -1,10 +1,9 @@
 import { socket } from '@/shared/api/socket';
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { useParams } from 'react-router-dom';
 import cn from 'classnames';
 import './send-message.scss';
-import { SubmitHandler, useForm } from 'react-hook-form';
 import { LiveAudioVisualizer } from 'react-audio-visualize';
 import { Button, Message } from '@/shared/ui';
 import { PiMicrophoneThin } from 'react-icons/pi';

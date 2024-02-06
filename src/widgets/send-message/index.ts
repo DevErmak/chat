@@ -1,1 +1,1 @@
-import { SendMessage } from './ui/send-message/SendMessage';
+export { SendMessage } from './ui/send-message/SendMessage';

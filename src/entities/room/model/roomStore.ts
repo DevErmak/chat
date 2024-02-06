@@ -1,12 +1,14 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
-import { IRoomDataServer, IRoomsState } from './types';
+import { IRoomDataServer, IRoomsState, IUserDataServer } from './types';
 
 export const useRoomStore = create<IRoomsState>()(
   devtools(
     immer((set) => ({
       rooms: [],
+      users: [],
+      nameRoom: '',
       isLoading: false,
       setRooms: (rooms) =>
         set((state) => {
@@ -19,6 +21,22 @@ export const useRoomStore = create<IRoomsState>()(
       removeRoom: (room) =>
         set((state) => {
           state.rooms = state.rooms.filter((roomsId: IRoomDataServer) => roomsId.id !== room.id);
+        }),
+      setNameRoom: (nameRoom) =>
+        set((state) => {
+          state.nameRoom = nameRoom;
+        }),
+      setUsers: (users) =>
+        set((state) => {
+          state.users = users;
+        }),
+      addUser: (user) =>
+        set((state) => {
+          state.users.push(user);
+        }),
+      removeUser: (user) =>
+        set((state) => {
+          state.users = state.users.filter((userId: IUserDataServer) => userId.id !== user.id);
         }),
     })),
   ),
