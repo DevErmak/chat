@@ -10,6 +10,8 @@ import { Button, Message } from '@/shared/ui';
 import { PiMicrophoneThin } from 'react-icons/pi';
 import { VscSend } from 'react-icons/vsc';
 import { PiStopThin } from 'react-icons/pi';
+import { IoPlayOutline } from 'react-icons/io5';
+import { HiOutlinePause } from 'react-icons/hi2';
 
 interface ISendMessageProps {
   sizeIcon?: number;
@@ -25,6 +27,7 @@ export const SendMessage: React.FC<ISendMessageProps> = ({ className, onClick, s
   const [myAudioActive, setMyAudioActive] = useState(false);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [textValue, setTextValue] = useState('');
+  const [toggleSound, setToggleSound] = useState(true);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const visualizerRef = useRef<HTMLCanvasElement>(null);
 
@@ -109,59 +112,81 @@ export const SendMessage: React.FC<ISendMessageProps> = ({ className, onClick, s
   }
   return (
     <div className={cn('send-message', className)} onClick={onClick} ref={messageVisualRef}>
-      <div className={'form-message'}>
-        <div className={'visual-message'}>
+      <Button
+        type={'outline'}
+        className={cn({ isRecord: !recording })}
+        onClick={handleStopRecording}
+      >
+        <PiStopThin size={sizeIcon} />
+      </Button>
+      {myAudioActive ? (
+        toggleSound ? (
           <Button
-            type={'outline'}
-            className={cn({ isRecord: !recording })}
-            onClick={handleStopRecording}
+            className={'button_play'}
+            type="outline"
+            onClick={() => {
+              setToggleSound(!toggleSound);
+            }}
           >
-            <PiStopThin size={sizeIcon} />
+            <IoPlayOutline size={sizeIcon} />
           </Button>
-          {myAudioActive ? (
-            <Message
-              type="voice"
-              blob={audioBlob as Blob}
-              visualizerRef={visualizerRef}
-              audioWidth={200}
-              barColor={'#2f9b43'}
-              barPlayedColor={'#bef574'}
-              sizeIcon={28}
-            />
-          ) : !recording ? (
-            <textarea
-              ref={textareaRef}
-              className="input-message"
-              value={textValue}
-              onChange={(e) => {
-                const textarea = textareaRef.current;
-                if (textarea) {
-                  textarea.style.height = `${40}px`;
-                  const scrollY = textarea.scrollHeight || 0;
-                  textarea.style.height = `${scrollY}px`;
-                }
-                setTextValue(e.target.value);
-              }}
-            />
-          ) : (
-            <LiveAudioVisualizer
-              mediaRecorder={mediaRecorderRef.current as MediaRecorder}
-              width={widthMsgVisual! - 77}
-              height={40}
-            />
-          )}
-        </div>
-        <div className={'send-button'}>
-          {textValue.length > 0 || myAudioActive || recording ? (
-            <Button type={'outline'} ButtonType={'submit'} onClick={() => handleSendMsg()}>
-              <VscSend size={sizeIcon} />
-            </Button>
-          ) : (
-            <Button type={'outline'} onClick={handleStartRecording}>
-              <PiMicrophoneThin size={sizeIcon} />
-            </Button>
-          )}
-        </div>
+        ) : (
+          <Button
+            className={'button_play'}
+            type="outline"
+            onClick={() => {
+              setToggleSound(!toggleSound);
+            }}
+          >
+            <HiOutlinePause size={sizeIcon} />
+          </Button>
+        )
+      ) : null}
+      <div className={'form-message'}>
+        {myAudioActive ? (
+          <Message
+            type="voice"
+            blob={audioBlob as Blob}
+            visualizerRef={visualizerRef}
+            audioWidth={200}
+            barColor={'#2f9b43'}
+            barPlayedColor={'#bef574'}
+            sizeIcon={28}
+            isWithButton={true}
+          />
+        ) : !recording ? (
+          <textarea
+            ref={textareaRef}
+            className="input-message"
+            value={textValue}
+            onChange={(e) => {
+              const textarea = textareaRef.current;
+              if (textarea) {
+                textarea.style.height = `${40}px`;
+                const scrollY = textarea.scrollHeight || 0;
+                textarea.style.height = `${scrollY}px`;
+              }
+              setTextValue(e.target.value);
+            }}
+          />
+        ) : (
+          <LiveAudioVisualizer
+            mediaRecorder={mediaRecorderRef.current as MediaRecorder}
+            width={widthMsgVisual! - 77}
+            height={40}
+          />
+        )}
+      </div>
+      <div className={'send-button'}>
+        {textValue.length > 0 || myAudioActive || recording ? (
+          <Button type={'outline'} ButtonType={'submit'} onClick={() => handleSendMsg()}>
+            <VscSend size={sizeIcon} />
+          </Button>
+        ) : (
+          <Button type={'outline'} onClick={handleStartRecording}>
+            <PiMicrophoneThin size={sizeIcon} />
+          </Button>
+        )}
       </div>
     </div>
   );

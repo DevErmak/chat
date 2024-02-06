@@ -22,42 +22,44 @@
   width: 0px;
 }
 .form-message {
-  // display: flex;
-  // flex-direction: row;
-  // align-items: flex-end;
-  // justify-content: center;
-  display: grid;
-  grid-template-columns: auto auto;
   width: 100%;
-  align-items: end;
-  justify-items: center;
-  > .send-button {
-    grid-column: 2/3;
-  }
-}
-.isRecord {
-  display: none;
-}
-
-.visual-message {
-  width: 100%;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: end;
+  // display: grid;
+  // grid-template-columns: auto 1fr;
+  // align-items: end;
   > .message {
     &.voice {
-      grid-column: 2/3;
+      // grid-column: 2/3;
+      display: flex;
       padding: 0px;
       margin: 0px;
-      display: grid;
-      grid-template-columns: auto auto;
-      align-items: end;
+      // display: grid;
+      // grid-template-columns: auto auto;
+      // align-items: end;
       > .voice_visual {
         border-color: rgb(47 155 67);
         height: 40px;
         grid-column: 2/3;
         width: 100%;
       }
+    }
+  }
+}
+
+.isRecord {
+  display: none;
+}
+
+.chat-page {
+  &.send-message {
+    // display: grid;
+    // grid-template-columns: auto auto auto;
+    // justify-items: center;
+    // align-items: end;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
+    > .send-button {
+      // grid-column: 3/4;
     }
   }
 }

@@ -25,6 +25,7 @@ interface IMessageProps {
   barColor?: string;
   barPlayedColor?: string;
   sizeIcon?: number;
+  isWithButton?: boolean;
 }
 
 export const Message: React.FC<IMessageProps> = ({
@@ -39,6 +40,7 @@ export const Message: React.FC<IMessageProps> = ({
   barColor = '#abcdef',
   barPlayedColor = '#8DA0B3',
   sizeIcon = 25,
+  isWithButton = false,
 }) => {
   const [toggleSound, setToggleSound] = useState(true);
   switch (type) {
@@ -55,7 +57,7 @@ export const Message: React.FC<IMessageProps> = ({
 
       return (
         <div className={cn('message', type, className)} onClick={onClick}>
-          {toggleSound ? (
+          {isWithButton ? null : toggleSound ? (
             <Button
               className={'button_play'}
               type="outline"
