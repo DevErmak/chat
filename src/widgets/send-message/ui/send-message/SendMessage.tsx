@@ -12,6 +12,7 @@ import { VscSend } from 'react-icons/vsc';
 import { PiStopThin } from 'react-icons/pi';
 import { IoPlayOutline } from 'react-icons/io5';
 import { HiOutlinePause } from 'react-icons/hi2';
+import { RxCross2 } from 'react-icons/rx';
 
 interface ISendMessageProps {
   sizeIcon?: number;
@@ -105,6 +106,12 @@ export const SendMessage: React.FC<ISendMessageProps> = ({ className, onClick, s
     }
   };
 
+  const handleDeleteVoice = () => {
+    setAudioBlob(null);
+    setTextValue('');
+    setMyAudioActive(false);
+  };
+
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   console.log('---------------->widthMsgVisual', widthMsgVisual);
   if (!navigator.mediaDevices.getUserMedia) {
@@ -119,6 +126,11 @@ export const SendMessage: React.FC<ISendMessageProps> = ({ className, onClick, s
       >
         <PiStopThin size={sizeIcon} />
       </Button>
+      {myAudioActive ? (
+        <Button className={'button_play'} type="outline" onClick={() => handleDeleteVoice()}>
+          <RxCross2 size={sizeIcon} />
+        </Button>
+      ) : null}
       {myAudioActive ? (
         toggleSound ? (
           <Button
