@@ -8,22 +8,23 @@ import { useRoomStore } from '@/entities/room';
 import { Button, Typography } from '@/shared/ui';
 import { useNavigate } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { io } from 'socket.io-client';
+// import { io } from 'socket.io-client';
+import { socket } from '@/shared/api/socket';
 interface IFormInput {
   roomName: string;
 }
 type Props = {};
 export const Rooms: React.FC<any> = ({}: Props) => {
-  const userInfo = useUserStore((state) => {
-    return { nickName: state.nickName, userId: state.id };
-  });
+  // const userInfo = useUserStore((state) => {
+  //   return { nickName: state.nickName, userId: state.id };
+  // });
   const setRooms = useRoomStore((state) => state.setRooms);
   const rooms = useRoomStore((state) => state.rooms);
   const addRoom = useRoomStore((state) => state.addRoom);
   const [cookie, setCookie] = useCookies(['token']);
   const navigate = useNavigate();
 
-  const [socket, setSocket] = useState(io('http://localhost:4000'));
+  // const [socket, setSocket] = useState(io('http://localhost:4000'));
 
   // useLayoutEffect(() => {
   //   async function getRooms() {
@@ -41,15 +42,48 @@ export const Rooms: React.FC<any> = ({}: Props) => {
   //   getRooms();
   // }, []);
 
-  useEffect(() => {
-    const newSocket = io('http://localhost:4000');
+  // useEffect(() => {
+  //   const newSocket = io('http://localhost:4000');
 
-    setSocket(newSocket);
+  //   setSocket(newSocket);
+  //   console.log('---------------->qqq');
+  //   newSocket.emit('get rooms');
+
+  //   console.log('---------------->wqqq');
+  //   newSocket.on('get rooms', (data) => {
+  //     console.log('---------------->!!!rooms', data);
+  //     if (data === 'not have room') {
+  //       setRooms([]);
+  //       console.log('---------------->!!!noroom', rooms);
+  //     } else {
+  //       setRooms(data);
+  //     }
+  //     console.log('---------------->wsqqq');
+  //   });
+
+  //   newSocket.on('add room', (room) => {
+  //     console.log('--------------add room', room);
+  //     addRoom(room);
+  //   });
+
+  //   return () => {
+  //     newSocket.disconnect();
+  //   };
+  // }, []);
+  // useEffect(() => {
+  // socket.connect();
+  // return () => {
+  //   socket.disconnect();
+  // };
+  // }, []);
+  useEffect(() => {
+    // const socket = io('http://localhost:4000');
+    // socket.connect();
     console.log('---------------->qqq');
-    newSocket.emit('get rooms');
+    socket.emit('get rooms');
 
     console.log('---------------->wqqq');
-    newSocket.on('get rooms', (data) => {
+    socket.on('get rooms', (data) => {
       console.log('---------------->!!!rooms', data);
       if (data === 'not have room') {
         setRooms([]);
@@ -60,14 +94,14 @@ export const Rooms: React.FC<any> = ({}: Props) => {
       console.log('---------------->wsqqq');
     });
 
-    newSocket.on('add room', (room) => {
+    socket.on('add room', (room) => {
       console.log('--------------add room', room);
       addRoom(room);
     });
 
-    return () => {
-      newSocket.disconnect();
-    };
+    // return () => {
+    //   socket.disconnect();
+    // };
   }, []);
 
   const handleRoomClick = (roomId: number) => {

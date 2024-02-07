@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
-import { IRoomDataServer, IRoomsState, IUserDataServer } from './types';
+import { IRoomDataServer, IRoomsState } from './types';
 
 export const useRoomStore = create<IRoomsState>()(
   devtools(
@@ -29,14 +29,6 @@ export const useRoomStore = create<IRoomsState>()(
       setUsers: (users) =>
         set((state) => {
           state.users = users;
-        }),
-      addUser: (user) =>
-        set((state) => {
-          state.users.push(user);
-        }),
-      removeUser: (user) =>
-        set((state) => {
-          state.users = state.users.filter((userId: IUserDataServer) => userId.id !== user.id);
         }),
     })),
   ),

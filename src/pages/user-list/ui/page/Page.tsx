@@ -7,11 +7,11 @@ import { axiosServerChat } from '@/shared/api/v1';
 import classNames from 'classnames';
 import { useUserStore } from '@/entities/user';
 import { useCookies } from 'react-cookie';
-import io from 'socket.io-client';
+// import io from 'socket.io-client';
 
 type Props = {};
 export const UserList: React.FC<any> = ({}: Props) => {
-  const [socket, setSocket] = useState(io('http://localhost:4000'));
+  // const [socket, setSocket] = useState(io('http://localhost:4000'));
 
   const userInfo = useUserStore((state) => {
     return { nickName: state.nickName, userId: state.id };

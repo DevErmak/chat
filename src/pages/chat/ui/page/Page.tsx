@@ -1,9 +1,11 @@
+import { socket } from '@/shared/api/socket';
 import './page.scss';
 
 import { Messages } from '@/widgets/messages';
 import { NameRoom } from '@/widgets/name-room';
 import { SendMessage } from '@/widgets/send-message';
 import { UserList } from '@/widgets/user-list';
+import { useEffect } from 'react';
 
 // const MicRecorder = require('mic-recorder-to-mp3');
 
@@ -20,9 +22,12 @@ import { UserList } from '@/widgets/user-list';
 
 type Props = {};
 export const Chat: React.FC<any> = ({}: Props) => {
-  if (!navigator.mediaDevices.getUserMedia) {
-    return <div>Ваш браузер не поддерживает запись аудио</div>;
-  }
+  // useEffect(() => {
+  //   socket.connect();
+  //   // return () => {
+  //   //   socket.disconnect();
+  //   // };
+  // }, []);
   return (
     <div className="chat-page">
       <NameRoom sizeIcon={20} />

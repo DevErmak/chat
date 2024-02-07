@@ -6,9 +6,11 @@ import cn from 'classnames';
 import { Button } from '../../../../shared/ui/button/Button';
 import { SlActionUndo } from 'react-icons/sl';
 import { useNavigate, useParams } from 'react-router-dom';
-import { socket } from '@/shared/api/socket';
+// import { socket } from '@/shared/api/socket';
 import { useRoomStore } from '@/entities/room';
 import { Typography } from '@/shared/ui';
+import { useCookies } from 'react-cookie';
+import { socket } from '@/shared/api/socket';
 
 interface INameRoomProps {
   className?: string | string[];
@@ -16,24 +18,32 @@ interface INameRoomProps {
 }
 
 export const UserList: React.FC<INameRoomProps> = ({ className, sizeIcon = 25 }) => {
-  const navigate = useNavigate();
+  const [cookie] = useCookies(['token']);
+  console.log('---------------->cookie', cookie);
   const { roomId } = useParams();
   const users = useRoomStore((state) => state.users);
   const setUsers = useRoomStore((state) => state.setUsers);
 
   useEffect(() => {
-    socket.emit('get user in room', { roomId });
+    // socket.connect();
+
+    socket.emit('get user in room', { roomId, token: cookie.token });
     console.log('---------------->sss');
     socket.on('get user in room', (users) => {
       console.log('---------------->nameRoom', users);
       setUsers(users);
     });
+    // return () => {
+    //   socket.disconnect();
+    // };
   }, []);
-
+  console.log('---------------->users', users);
   return (
     <div className={cn('user-list', className)}>
       {users.map((user) => (
-        <Typography type="display-sm">{user.nickName}</Typography>
+        <Typography key={user} type="display-sm">
+          {user}
+        </Typography>
       ))}
     </div>
   );

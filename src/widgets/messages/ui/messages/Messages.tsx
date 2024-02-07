@@ -1,14 +1,10 @@
 import { useMessageStore } from '@/entities/message';
-import { socket } from '@/shared/api/socket';
 import { Message, Signature, Typography } from '@/shared/ui';
 import { useEffect, useRef, useState } from 'react';
-import { useCookies } from 'react-cookie';
 import { useParams } from 'react-router-dom';
-import { io } from 'socket.io-client';
 import cn from 'classnames';
 import './messages.scss';
-
-type Props = {};
+import { socket } from '@/shared/api/socket';
 
 interface IMessagesProps {
   className?: string | string[];
@@ -23,6 +19,8 @@ export const Messages: React.FC<IMessagesProps> = ({ className, onClick }) => {
   const visualizerRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
+    // socket.connect();
+
     socket.emit('get prev message', { roomId });
 
     socket.on('get prev message', (msg) => {

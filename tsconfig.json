@@ -18,7 +18,7 @@
     "typeRoots": ["custom.d.ts", "node_modules/@types"],
     "strictPropertyInitialization": false
   },
-  "files": ["custom.d.ts"],
+  "files": ["custom.d.ts", "./src/widgets/user-list/ui/user-list/UserList.1.tsx"],
   "include": ["src", "custom.d.ts", "src/widgets/layout/.tsx"],
   "extends": "./tsconfig.path.json"
 }
