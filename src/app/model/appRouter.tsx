@@ -34,33 +34,27 @@ export const appRouter = () =>
       element: <Home />,
     },
     {
-      path: '/',
-      element: <DefaultLayout />,
-      children: [
-        {
-          path: '/rooms/:roomId',
-          element: (
-            <GuestGuard>
-              <Chat />
-            </GuestGuard>
-          ),
-        },
-        {
-          path: '/rooms',
-          element: (
-            <GuestGuard>
-              <Rooms />
-            </GuestGuard>
-          ),
-        },
-        // {
-        //   path: '/users',
-        //   element: (
-        //     <GuestGuard>
-        //       <UserList />
-        //     </GuestGuard>
-        //   ),
-        // },
-      ],
+      path: '/rooms/:roomId',
+      element: (
+        <GuestGuard>
+          <Chat />
+        </GuestGuard>
+      ),
     },
+    {
+      path: '/rooms',
+      element: (
+        <GuestGuard>
+          <Rooms />
+        </GuestGuard>
+      ),
+    },
+    // {
+    //   path: '/users',
+    //   element: (
+    //     <GuestGuard>
+    //       <UserList />
+    //     </GuestGuard>
+    //   ),
+    // },
   ]);

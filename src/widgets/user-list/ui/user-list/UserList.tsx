@@ -45,7 +45,7 @@ export const UserList: React.FC<INameRoomProps> = ({ className, sizeIcon = 25 })
   return (
     <div className={cn('user-list', className)}>
       {users.map((user) => (
-        <Typography key={user} type="display-sm">
+        <Typography key={user} type="display-xs">
           {user}
         </Typography>
       ))}

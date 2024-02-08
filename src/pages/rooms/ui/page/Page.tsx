@@ -78,7 +78,7 @@ export const Rooms: React.FC<any> = ({}: Props) => {
   // }, []);
   useEffect(() => {
     // const socket = io('http://localhost:4000');
-    socket.connect();
+    // socket.connect();
     console.log('---------------->qqq');
     socket.emit('get rooms');
 
@@ -122,7 +122,7 @@ export const Rooms: React.FC<any> = ({}: Props) => {
   console.log('---------------->es', rooms);
   if (rooms === undefined || rooms.length === 0)
     return (
-      <div className="chat-page">
+      <div className="">
         <form onSubmit={handleSubmit(onSubmit)}>
           <input {...register('roomName')} />
           <button type="submit">добавить комнату</button>
@@ -132,7 +132,7 @@ export const Rooms: React.FC<any> = ({}: Props) => {
     );
   else
     return (
-      <div className="chat-page">
+      <div className="room-page">
         <form onSubmit={handleSubmit(onSubmit)}>
           <input {...register('roomName')} />
           <button type="submit">добавить комнату</button>

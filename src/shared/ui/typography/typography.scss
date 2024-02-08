@@ -6,14 +6,7 @@
   line-height: normal;
   text-transform: uppercase;
 }
-.display-xs {
-  font-family: 'PT Serif';
-  font-size: 28px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 50px;
-  letter-spacing: 1.12px;
-}
+
 .display-xl {
   font-family: 'PT Serif';
   font-size: 80px;
@@ -24,7 +17,7 @@
   text-transform: uppercase;
 }
 .display-sm {
-  font-family: 'PT Serif';
+  font-family: 'Rubik';
   font-size: 32px;
   font-style: normal;
   font-weight: 400;
@@ -46,12 +39,12 @@
   line-height: normal;
 }
 .display-xs {
-  font-family: 'PT Serif';
-  font-size: 28px;
+  font-family: 'Rubik';
+  font-size: 20px;
   font-style: normal;
   font-weight: 400;
-  line-height: 50px;
   letter-spacing: 1.12px;
+  margin: 0px;
 }
 .display-lg {
   font-family: 'PT Serif';

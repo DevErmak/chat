@@ -1,5 +1,12 @@
 .user-list {
   display: flex;
+  flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  // color: rgb(89, 70, 229);
+  color: rgb(31, 27, 44);
+  overflow-y: scroll;
+}
+.user-list::-webkit-scrollbar {
+  width: 0px;
 }
