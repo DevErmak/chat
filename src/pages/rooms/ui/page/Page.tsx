@@ -78,7 +78,7 @@ export const Rooms: React.FC<any> = ({}: Props) => {
   // }, []);
   useEffect(() => {
     // const socket = io('http://localhost:4000');
-    // socket.connect();
+    socket.connect();
     console.log('---------------->qqq');
     socket.emit('get rooms');
 

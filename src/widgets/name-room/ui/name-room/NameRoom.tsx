@@ -9,6 +9,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useRoomStore } from '@/entities/room';
 import { Typography } from '@/shared/ui';
 import { socket } from '@/shared/api/socket';
+import { useCookies } from 'react-cookie';
 
 interface INameRoomProps {
   className?: string | string[];
@@ -20,6 +21,8 @@ export const NameRoom: React.FC<INameRoomProps> = ({ className, sizeIcon = 25 })
   const { roomId } = useParams();
   const nameRoom = useRoomStore((state) => state.nameRoom);
   const setNameRoom = useRoomStore((state) => state.setNameRoom);
+  const setUsers = useRoomStore((state) => state.setUsers);
+  const [cookie] = useCookies(['token']);
 
   useEffect(() => {
     // socket.connect();
@@ -39,8 +42,15 @@ export const NameRoom: React.FC<INameRoomProps> = ({ className, sizeIcon = 25 })
       <Button
         type={'outline'}
         onClick={() => {
+          socket.emit('user leave room', { roomId, token: cookie.token });
           socket.disconnect();
-          // navigate('/rooms');
+          console.log('---------------->sss');
+          // socket.on('disconnect user in room', (users) => {
+          //   console.log('---------------->123nameRoom', users);
+          //   setUsers(users);
+          // });
+          console.log('---------------->www');
+          navigate('/rooms');
         }}
       >
         <SlActionUndo size={sizeIcon} />
