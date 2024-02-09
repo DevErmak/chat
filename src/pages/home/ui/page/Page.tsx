@@ -3,8 +3,9 @@ import './page.scss';
 import { useNavigate } from 'react-router-dom';
 import { useUserStore } from '@/entities/user';
 import { axiosServerChat } from '@/shared/api/v1';
-import { Typography } from '@/shared/ui';
+import { Button, Typography } from '@/shared/ui';
 import { useCookies } from 'react-cookie';
+import { ReactComponent as SvgEnterKey } from '@/shared/ui/svg/enter-key.svg';
 
 interface IFormInput {
   nickName: string;
@@ -31,9 +32,13 @@ export const Home: React.FC<any> = ({}: Props) => {
     }
   };
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <input {...register('nickName')} />
-      <button type="submit">Submit</button>
-    </form>
+    <div className="home-page">
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <input {...register('nickName')} className={'input-message'} />
+        <Button type="outline" className={'enter-button'}>
+          <SvgEnterKey />
+        </Button>
+      </form>
+    </div>
   );
 };
