@@ -7,11 +7,24 @@
     display: flex;
     align-items: end;
     justify-content: center;
-    > .input-message {
+    > input {
       border: none;
-      border-bottom: 1px solid rgb(9, 107, 74);
-      border-radius: 0px;
-      width: unset;
+      border-bottom: 1px solid rgb(0, 0, 0);
+      transition: border-color 0.3s;
+      word-wrap: break-word;
+      box-sizing: border-box;
+      word-break: break-all;
+      font-family: 'PT Serif';
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      color: rgb(31 27 44);
+      width: 100%;
+      outline: none;
+    }
+    > input:focus {
+      border-bottom: 1px solid rgb(14, 133, 93);
     }
     > .enter-button {
       display: flex;

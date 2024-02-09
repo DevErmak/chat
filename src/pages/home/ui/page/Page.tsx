@@ -18,23 +18,24 @@ export const Home: React.FC<any> = ({}: Props) => {
   const setUserInfo = useUserStore((state) => state.setUserInfo);
   const { register, handleSubmit } = useForm<IFormInput>();
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    try {
-      const res = await axiosServerChat.post('/', {
-        nickName: data.nickName,
-      });
-      console.log('---------------->res.data', res.data);
-      setUserInfo(res.data.nickName, res.data.userId);
-      setCookie('token', res.data.token);
-      setCookie('session', res.data.userId);
-      navigate('/rooms');
-    } catch {
-      return <Typography type="text-md">сервер не доступен</Typography>;
-    }
+    if (data.nickName.trim())
+      try {
+        const res = await axiosServerChat.post('/', {
+          nickName: data.nickName,
+        });
+        console.log('---------------->res.data', res.data);
+        setUserInfo(res.data.nickName, res.data.userId);
+        setCookie('token', res.data.token);
+        setCookie('session', res.data.userId);
+        navigate('/rooms');
+      } catch {
+        return <Typography type="text-md">сервер не доступен</Typography>;
+      }
   };
   return (
     <div className="home-page">
       <form onSubmit={handleSubmit(onSubmit)}>
-        <input {...register('nickName')} className={'input-message'} />
+        <input {...register('nickName')} placeholder={'name'} />
         <Button type="outline" className={'enter-button'}>
           <SvgEnterKey />
         </Button>
