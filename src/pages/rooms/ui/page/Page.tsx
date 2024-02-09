@@ -70,12 +70,12 @@ export const Rooms: React.FC<any> = ({}: Props) => {
   //     newSocket.disconnect();
   //   };
   // }, []);
-  // useEffect(() => {
-  // socket.connect();
-  // return () => {
-  //   socket.disconnect();
-  // };
-  // }, []);
+  useEffect(() => {
+    socket.connect();
+    // return () => {
+    //   socket.disconnect();
+    // };
+  }, []);
   useEffect(() => {
     // const socket = io('http://localhost:4000');
     // socket.connect();

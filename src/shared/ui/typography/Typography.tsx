@@ -22,6 +22,7 @@ type TypographyTags = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span' | 'p' | '
 interface ITypographyProps {
   children: React.ReactNode;
   type: TypographyTypes;
+  isUnSelectable?: boolean;
   className?: string | string[];
   onClick?: () => void;
   variant?: TypographyTags;
@@ -50,11 +51,12 @@ export const Typography: React.FC<ITypographyProps> = ({
   type,
   children,
   onClick,
+  isUnSelectable = false,
 }) => {
   const TagName = variant || typographyMap[type];
 
   return (
-    <TagName className={cn(type, className)} onClick={onClick}>
+    <TagName className={cn(type, { unselectable: isUnSelectable }, className)} onClick={onClick}>
       {children}
     </TagName>
   );

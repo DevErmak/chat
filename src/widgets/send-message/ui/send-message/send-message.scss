@@ -49,17 +49,8 @@
   display: none;
 }
 
-.chat-page {
-  &.send-message {
-    // display: grid;
-    // grid-template-columns: auto auto auto;
-    // justify-items: center;
-    // align-items: end;
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-end;
-    > .send-button {
-      // grid-column: 3/4;
-    }
-  }
+.send-message {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
 }

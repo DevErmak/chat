@@ -54,8 +54,10 @@ export const NameRoom: React.FC<INameRoomProps> = ({ className, sizeIcon = 25 })
         }}
       >
         <SlActionUndo size={sizeIcon} />
+        <Typography type="display-sm" isUnSelectable={true}>
+          {nameRoom}
+        </Typography>
       </Button>
-      <Typography type="display-sm">{nameRoom}</Typography>
     </div>
   );
 };

@@ -1,6 +1,28 @@
 .name-room {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  color: rgb(6, 101, 61);
+  border-radius: 3px;
+  > button {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 5px;
+    width: 100%;
+    color: rgb(153, 196, 178);
+    > h5 {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      width: 100%;
+      font-size: 30px;
+    }
+  }
+  > button:hover {
+    background: linear-gradient(to right, #eeeeee, #f5f4f4, #f3f3f3, #ffffff);
+  }
+}
+.name-room:hover {
+  > button {
+    > svg {
+      color: rgb(96, 128, 114);
+      transition: all 0.3s;
+    }
+  }
 }

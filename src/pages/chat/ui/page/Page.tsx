@@ -32,8 +32,8 @@ export const Chat: React.FC<any> = ({}: Props) => {
     <div className="chat-page">
       <NameRoom sizeIcon={20} />
       <UserList />
-      <Messages className={'chat-page'} />
-      <SendMessage className={'chat-page'} />
+      <Messages />
+      <SendMessage />
     </div>
   );
 };
