@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import cn from 'classnames';
 import './messages.scss';
 import { socket } from '@/shared/api/socket';
+import { useCookies } from 'react-cookie';
 
 interface IMessagesProps {
   className?: string | string[];
@@ -14,12 +15,14 @@ export const Messages: React.FC<IMessagesProps> = ({ className, onClick }) => {
   const messages = useMessageStore((state) => state.message);
   const setMessages = useMessageStore((state) => state.setMessages);
   const addMessages = useMessageStore((state) => state.addMessages);
+  const [cookie] = useCookies(['token']);
 
   const { roomId } = useParams();
   const visualizerRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     // socket.connect();
+    socket.emit('join room', { token: cookie.token, roomId: roomId });
 
     socket.emit('get prev message', { roomId });
 

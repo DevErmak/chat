@@ -26,6 +26,9 @@ export const UserList: React.FC<INameRoomProps> = ({ className, sizeIcon = 25 })
 
   useEffect(() => {
     // socket.connect();
+    console.log('---------------->userlisteffect');
+
+    socket.emit('join room', { token: cookie.token, roomId: roomId });
 
     socket.emit('get user in room', { roomId, token: cookie.token });
     console.log('---------------->sss');
@@ -33,10 +36,10 @@ export const UserList: React.FC<INameRoomProps> = ({ className, sizeIcon = 25 })
       console.log('---------------->nameUser', users);
       setUsers(users);
     });
-    socket.on('user leave room', (users) => {
-      console.log('---------------->123nameRoom', users);
-      setUsers(users);
-    });
+    // socket.on('user leave room', (users) => {
+    //   console.log('---------------->123nameRoom', users);
+    //   setUsers(users);
+    // });
     // return () => {
     //   socket.disconnect();
     // };

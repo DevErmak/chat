@@ -6,6 +6,8 @@ import { NameRoom } from '@/widgets/name-room';
 import { SendMessage } from '@/widgets/send-message';
 import { UserList } from '@/widgets/user-list';
 import { useEffect } from 'react';
+import { useBeforeUnload, useParams } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 
 // const MicRecorder = require('mic-recorder-to-mp3');
 
@@ -22,12 +24,21 @@ import { useEffect } from 'react';
 
 type Props = {};
 export const Chat: React.FC<any> = ({}: Props) => {
+  const { roomId } = useParams();
+  const [cookie] = useCookies(['token']);
+
   // useEffect(() => {
-  //   //   socket.disconnect();
-  //   socket.connect();
-  //   // return () => {
-  //   // };
+  //   console.log('---------------->join');
+  //   // socket.emit('join room', { token: cookie.token, roomId: roomId });
+  //   return () => {
+  //     console.log('---------------->leave');
+  //     socket.emit('user leave room', { roomId, token: cookie.token });
+  //   };
   // }, []);
+
+  useBeforeUnload(() => {
+    socket.emit('user leave room', { roomId, token: cookie.token });
+  });
   return (
     <div className="chat-page">
       <NameRoom sizeIcon={20} />

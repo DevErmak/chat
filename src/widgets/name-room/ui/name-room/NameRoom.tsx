@@ -26,6 +26,8 @@ export const NameRoom: React.FC<INameRoomProps> = ({ className, sizeIcon = 25 })
 
   useEffect(() => {
     // socket.connect();
+    socket.emit('join room', { token: cookie.token, roomId: roomId });
+
     socket.emit('get name room', { roomId });
 
     socket.on('get name room', (nameRoom) => {
@@ -42,8 +44,7 @@ export const NameRoom: React.FC<INameRoomProps> = ({ className, sizeIcon = 25 })
       <Button
         type={'outline'}
         onClick={() => {
-          socket.emit('user leave room', { roomId, token: cookie.token });
-          socket.disconnect();
+          // socket.disconnect();
           console.log('---------------->sss');
           // socket.on('disconnect user in room', (users) => {
           //   console.log('---------------->123nameRoom', users);
