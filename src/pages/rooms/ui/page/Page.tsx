@@ -10,19 +10,19 @@ import { useNavigate } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 // import { io } from 'socket.io-client';
 import { socket } from '@/shared/api/socket';
+import { Rooms } from '@/widgets/rooms/ui/rooms/Rooms';
 interface IFormInput {
   roomName: string;
 }
 type Props = {};
-export const Rooms: React.FC<any> = ({}: Props) => {
+export const RoomPage: React.FC<any> = ({}: Props) => {
   // const userInfo = useUserStore((state) => {
   //   return { nickName: state.nickName, userId: state.id };
   // });
-  const setRooms = useRoomStore((state) => state.setRooms);
+  // const setRooms = useRoomStore((state) => state.setRooms);
   const rooms = useRoomStore((state) => state.rooms);
-  const addRoom = useRoomStore((state) => state.addRoom);
+  // const addRoom = useRoomStore((state) => state.addRoom);
   const [cookie, setCookie] = useCookies(['token']);
-  const navigate = useNavigate();
 
   // const [socket, setSocket] = useState(io('http://localhost:4000'));
 
@@ -70,43 +70,39 @@ export const Rooms: React.FC<any> = ({}: Props) => {
   //     newSocket.disconnect();
   //   };
   // }, []);
-  useEffect(() => {
-    socket.connect();
-    // return () => {
-    //   socket.disconnect();
-    // };
-  }, []);
-  useEffect(() => {
-    // const socket = io('http://localhost:4000');
-    // socket.connect();
-    console.log('---------------->qqq');
-    socket.emit('get rooms');
+  // useEffect(() => {
+  //   socket.connect();
+  //   // return () => {
+  //   //   socket.disconnect();
+  //   // };
+  // }, []);
+  // useEffect(() => {
+  //   // const socket = io('http://localhost:4000');
+  //   // socket.connect();
+  //   console.log('---------------->qqq');
+  //   socket.emit('get rooms');
 
-    console.log('---------------->wqqq');
-    socket.on('get rooms', (data) => {
-      console.log('---------------->!!!rooms', data);
-      if (data === 'not have room') {
-        setRooms([]);
-        console.log('---------------->!!!noroom', rooms);
-      } else {
-        setRooms(data);
-      }
-      console.log('---------------->wsqqq');
-    });
+  //   console.log('---------------->wqqq');
+  //   socket.on('get rooms', (data) => {
+  //     console.log('---------------->!!!rooms', data);
+  //     if (data === 'not have room') {
+  //       setRooms([]);
+  //       console.log('---------------->!!!noroom', rooms);
+  //     } else {
+  //       setRooms(data);
+  //     }
+  //     console.log('---------------->wsqqq');
+  //   });
 
-    socket.on('add room', (room) => {
-      console.log('--------------add room', room);
-      addRoom(room);
-    });
+  //   socket.on('add room', (room) => {
+  //     console.log('--------------add room', room);
+  //     addRoom(room);
+  //   });
 
-    // return () => {
-    //   socket.disconnect();
-    // };
-  }, []);
-
-  const handleRoomClick = (roomId: number) => {
-    navigate(`/rooms/${roomId}`);
-  };
+  //   // return () => {
+  //   //   socket.disconnect();
+  //   // };
+  // }, []);
 
   const { register, handleSubmit } = useForm<IFormInput>();
 
@@ -120,30 +116,13 @@ export const Rooms: React.FC<any> = ({}: Props) => {
   };
 
   console.log('---------------->es', rooms);
-  if (rooms === undefined || rooms.length === 0)
-    return (
-      <div className="">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <input {...register('roomName')} />
-          <button type="submit">добавить комнату</button>
-        </form>
-        комнат нет <img src={homerGif} alt="not rooms" />
-      </div>
-    );
-  else
-    return (
-      <div className="room-page">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <input {...register('roomName')} />
-          <button type="submit">добавить комнату</button>
-        </form>
-        <div>
-          {rooms.map((room: any, i) => (
-            <Typography type="text-md" key={i} onClick={() => handleRoomClick(room.id)}>
-              {room.name}
-            </Typography>
-          ))}
-        </div>
-      </div>
-    );
+  return (
+    <div className="room-page">
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <input {...register('roomName')} />
+        <button type="submit">добавить комнату</button>
+      </form>
+      <Rooms />
+    </div>
+  );
 };

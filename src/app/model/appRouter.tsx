@@ -1,7 +1,7 @@
 import { useUserStore } from '@/entities/user';
 import { Chat } from '@/pages/chat';
 import { Home } from '@/pages/home';
-import { Rooms } from '@/pages/rooms';
+import { RoomPage } from '@/pages/rooms/ui/page/Page';
 import { UserList } from '@/pages/user-list';
 import { DefaultLayout } from '@/widgets/layout';
 import { ReactElement, useEffect } from 'react';
@@ -45,7 +45,7 @@ export const appRouter = () =>
       path: '/rooms',
       element: (
         <GuestGuard>
-          <Rooms />
+          <RoomPage />
         </GuestGuard>
       ),
     },

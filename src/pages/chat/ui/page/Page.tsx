@@ -23,9 +23,9 @@ import { useEffect } from 'react';
 type Props = {};
 export const Chat: React.FC<any> = ({}: Props) => {
   // useEffect(() => {
+  //   //   socket.disconnect();
   //   socket.connect();
   //   // return () => {
-  //   //   socket.disconnect();
   //   // };
   // }, []);
   return (

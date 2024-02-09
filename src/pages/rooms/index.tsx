@@ -1,1 +1,1 @@
-export { Rooms } from './ui/page/Page';
+import { Rooms } from '@/widgets/rooms/ui/rooms/Rooms';
