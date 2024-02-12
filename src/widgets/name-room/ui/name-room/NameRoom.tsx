@@ -26,14 +26,14 @@ export const NameRoom: React.FC<INameRoomProps> = ({ className, sizeIcon = 25 })
 
   useEffect(() => {
     // socket.connect();
-    socket.emit('join room', { token: cookie.token, roomId: roomId });
+    // socket.emit('join room', { token: cookie.token, roomId: roomId });
+    console.log('---------------->name room useeefect');
+    // socket.emit('get name room', { roomId });
 
-    socket.emit('get name room', { roomId });
-
-    socket.on('get name room', (nameRoom) => {
-      console.log('---------------->nameRoom', nameRoom);
-      setNameRoom(nameRoom);
-    });
+    // socket.on('get name room', (nameRoom) => {
+    //   console.log('---------------->nameRoom', nameRoom);
+    //   setNameRoom(nameRoom);
+    // });
     // return () => {
     //   socket.disconnect();
     // };

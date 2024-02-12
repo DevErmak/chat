@@ -22,20 +22,20 @@ export const Messages: React.FC<IMessagesProps> = ({ className, onClick }) => {
 
   useEffect(() => {
     // socket.connect();
-    socket.emit('join room', { token: cookie.token, roomId: roomId });
+    // socket.emit('join room', { token: cookie.token, roomId: roomId });
 
-    socket.emit('get prev message', { roomId });
+    // socket.emit('get prev message', { roomId });
 
-    socket.on('get prev message', (msg) => {
-      setMessages(msg);
-    });
+    // socket.on('get prev message', (msg) => {
+    //   setMessages(msg);
+    // });
 
-    socket.on('send message', (msg) => {
-      console.log('--------------qwemsg', msg);
-      addMessages(msg);
-    });
+    // socket.on('send message', (msg) => {
+    //   console.log('--------------qwemsg', msg);
+    //   addMessages(msg);
+    // });
 
-    console.log('--------------q');
+    console.log('--------------mesgeuseeefect');
 
     // return () => {
     //   socket.disconnect();

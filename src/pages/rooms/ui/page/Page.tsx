@@ -11,6 +11,8 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 // import { io } from 'socket.io-client';
 import { socket } from '@/shared/api/socket';
 import { Rooms } from '@/widgets/rooms/ui/rooms/Rooms';
+import { ReactComponent as SvgAddRoom } from '@/shared/ui/svg/add-box.svg';
+
 interface IFormInput {
   roomName: string;
 }
@@ -104,10 +106,11 @@ export const RoomPage: React.FC<any> = ({}: Props) => {
   //   // };
   // }, []);
 
-  const { register, handleSubmit } = useForm<IFormInput>();
-
+  const { register, handleSubmit, watch } = useForm<IFormInput>();
+  const [inputTextNameRoom, setInputTextNameRoom] = useState('');
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    socket.emit('add room', { token: cookie.token, roomName: data.roomName });
+    if (data.roomName.trim())
+      socket.emit('add room', { token: cookie.token, roomName: data.roomName });
     // const res = await axiosServerChat.post('/createRoom', {
     //   roomName: data.roomName,
     // });
@@ -116,11 +119,29 @@ export const RoomPage: React.FC<any> = ({}: Props) => {
   };
 
   console.log('---------------->es', rooms);
+
+  const isHaveText = (val: string): boolean => {
+    console.log('---------------->val', val);
+    if (val.trim() === '') {
+      console.log('---------------->bubq');
+      return true;
+    }
+    console.log('---------------->bq');
+    return false;
+  };
+  const watchShow = watch('roomName', '');
   return (
     <div className="room-page">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <input {...register('roomName')} />
-        <button type="submit">добавить комнату</button>
+      <form onSubmit={handleSubmit(onSubmit)} className="form_name_room">
+        <input {...register('roomName')} className="input_name_room" />
+        <Button
+          ButtonType={'submit'}
+          className="button_name_room"
+          type={'outline'}
+          disabled={isHaveText(watchShow)}
+        >
+          <SvgAddRoom width={25} height={25} />
+        </Button>
       </form>
       <Rooms />
     </div>

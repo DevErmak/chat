@@ -51,7 +51,7 @@ export const Message: React.FC<IMessageProps> = ({
         </div>
       );
     case 'voice':
-      console.log('---------------->!!!!blob', blob);
+      // console.log('---------------->!!!!blob', blob);
       const audioUrl = URL.createObjectURL(blob as Blob);
       const audioElement = new Audio(audioUrl);
 
