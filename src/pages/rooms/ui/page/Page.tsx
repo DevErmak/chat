@@ -25,6 +25,36 @@ export const RoomPage: React.FC<any> = ({}: Props) => {
   const rooms = useRoomStore((state) => state.rooms);
   // const addRoom = useRoomStore((state) => state.addRoom);
   const [cookie, setCookie] = useCookies(['token']);
+  const setRooms = useRoomStore((state) => state.setRooms);
+  const addRoom = useRoomStore((state) => state.addRoom);
+
+  useEffect(() => {
+    // const socket = io('http://localhost:4000');
+    // socket.connect();
+    console.log('---------------->qqq');
+    socket.emit('get rooms');
+
+    // console.log('---------------->wqqq');
+    socket.on('get rooms', (data) => {
+      console.log('---------------->!!!rooms', data);
+      if (data === 'not have room') {
+        setRooms([]);
+        console.log('---------------->!!!noroom', rooms);
+      } else {
+        setRooms(data);
+      }
+      console.log('---------------->wsqqq');
+    });
+
+    socket.on('add room', (room) => {
+      console.log('--------------add room', room);
+      addRoom(room);
+    });
+
+    // return () => {
+    //   socket.disconnect();
+    // };
+  }, []);
 
   // const [socket, setSocket] = useState(io('http://localhost:4000'));
 
@@ -107,7 +137,6 @@ export const RoomPage: React.FC<any> = ({}: Props) => {
   // }, []);
 
   const { register, handleSubmit, watch } = useForm<IFormInput>();
-  const [inputTextNameRoom, setInputTextNameRoom] = useState('');
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     if (data.roomName.trim())
       socket.emit('add room', { token: cookie.token, roomName: data.roomName });

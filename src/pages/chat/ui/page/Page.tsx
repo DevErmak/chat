@@ -60,6 +60,8 @@ export const Chat: React.FC<any> = ({}: Props) => {
       console.log('--------------qwemsg', msg);
       addMessages(msg);
     });
+
+    
     return () => {
       console.log('---------------->leave');
       socket.emit('user leave room', { roomId, token: cookie.token });

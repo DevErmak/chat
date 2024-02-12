@@ -17,6 +17,7 @@ export const Home: React.FC<any> = ({}: Props) => {
   const [cookie, setCookie] = useCookies(['token', 'session']);
   const setUserInfo = useUserStore((state) => state.setUserInfo);
   const { register, handleSubmit } = useForm<IFormInput>();
+
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     if (data.nickName.trim())
       try {

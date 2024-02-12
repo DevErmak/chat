@@ -51,7 +51,7 @@ export const Message: React.FC<IMessageProps> = ({
         </div>
       );
     case 'voice':
-      // console.log('---------------->!!!!blob', blob);
+      console.log('---------------->!!!!blob', blob);
       const audioUrl = URL.createObjectURL(blob as Blob);
       const audioElement = new Audio(audioUrl);
 
@@ -74,7 +74,7 @@ export const Message: React.FC<IMessageProps> = ({
               type="outline"
               onClick={() => {
                 setToggleSound(!toggleSound);
-                audioElement.pause();
+                audioElement.pause(true);
               }}
             >
               <HiOutlinePause size={sizeIcon} />

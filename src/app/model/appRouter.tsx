@@ -1,7 +1,7 @@
 import { useUserStore } from '@/entities/user';
 import { Chat } from '@/pages/chat';
 import { Home } from '@/pages/home';
-import { RoomPage } from '@/pages/rooms/ui/page/Page';
+import { RoomPage } from '@/pages/rooms';
 import { UserList } from '@/pages/user-list';
 import { DefaultLayout } from '@/widgets/layout';
 import { ReactElement, useEffect } from 'react';

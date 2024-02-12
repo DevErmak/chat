@@ -6,6 +6,7 @@ import cn from 'classnames';
 import './messages.scss';
 import { socket } from '@/shared/api/socket';
 import { useCookies } from 'react-cookie';
+import uuid from 'react-uuid';
 
 interface IMessagesProps {
   className?: string | string[];
@@ -48,15 +49,17 @@ export const Messages: React.FC<IMessagesProps> = ({ className, onClick }) => {
         if (typeof msg.text !== 'string') {
           const blob = new Blob([msg.text], { type: 'audio/wav' });
           return (
-            <Signature type={'default'} date={msg.date} nameSender={msg.nickName}>
-              <Message type="voice" blob={blob} visualizerRef={visualizerRef} />
+            <Signature type={'default'} date={msg.date} nameSender={msg.nickName} key={uuid()}>
+              <Message type="voice" blob={blob} visualizerRef={visualizerRef} key={uuid()} />
             </Signature>
           );
         } else
           return (
-            <Signature type={'default'} date={msg.date} nameSender={msg.nickName}>
-              <Message type="text">
-                <Typography type="text-md">{msg.text}</Typography>
+            <Signature type={'default'} date={msg.date} nameSender={msg.nickName} key={uuid()}>
+              <Message type="text" key={uuid()}>
+                <Typography type="text-md" key={uuid()}>
+                  {msg.text}
+                </Typography>
               </Message>
             </Signature>
           );
