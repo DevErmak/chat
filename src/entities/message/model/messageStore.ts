@@ -8,6 +8,9 @@ export const useMessageStore = create<IMessageState>()(
     immer((set) => ({
       message: [],
       voice: [],
+      UrlCurrentVoice: '',
+      activeVoice: false,
+      audioElement: new Audio(),
       isLoading: false,
       setMessages: (message) =>
         set((state) => {
@@ -27,6 +30,14 @@ export const useMessageStore = create<IMessageState>()(
           state.message = state.message.filter(
             (currentMessage) => currentMessage.id !== message.id,
           );
+        }),
+      setUrlCurrentVoice: (blob) =>
+        set((state) => {
+          state.UrlCurrentVoice = URL.createObjectURL(blob);
+        }),
+      setActiveVoice: (isActive: boolean) =>
+        set((state) => {
+          state.activeVoice = isActive;
         }),
     })),
   ),

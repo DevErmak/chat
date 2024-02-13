@@ -5,13 +5,14 @@ import { useParams } from 'react-router-dom';
 import cn from 'classnames';
 import './send-message.scss';
 import { LiveAudioVisualizer } from 'react-audio-visualize';
-import { Button, Message } from '@/shared/ui';
+import { Button, VoiceMessage } from '@/shared/ui';
 import { PiMicrophoneThin } from 'react-icons/pi';
 import { VscSend } from 'react-icons/vsc';
 import { PiStopThin } from 'react-icons/pi';
 import { IoPlayOutline } from 'react-icons/io5';
 import { HiOutlinePause } from 'react-icons/hi2';
 import { RxCross2 } from 'react-icons/rx';
+import fixWebmDuration from 'webm-duration-fix';
 
 interface ISendMessageProps {
   sizeIcon?: number;
@@ -66,8 +67,8 @@ export const SendMessage: React.FC<ISendMessageProps> = ({ className, onClick, s
           }
         };
 
-        mediaRecorder.onstop = () => {
-          const audioBlob = new Blob(chunks, { type: 'audio/wav' });
+        mediaRecorder.onstop = async () => {
+          const audioBlob = await fixWebmDuration(new Blob([...chunks], { type: 'audio/wav' }));
           setAudioBlob(audioBlob);
           setMyAudioActive(true);
         };
@@ -155,10 +156,9 @@ export const SendMessage: React.FC<ISendMessageProps> = ({ className, onClick, s
       ) : null}
       <div className={'form-message'}>
         {myAudioActive ? (
-          <Message
+          <VoiceMessage
             type="voice"
             blob={audioBlob as Blob}
-            visualizerRef={visualizerRef}
             audioWidth={240}
             barColor={'#2f9b43'}
             barPlayedColor={'#bef574'}
