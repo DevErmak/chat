@@ -27,6 +27,7 @@ export const SendMessage: React.FC<ISendMessageProps> = ({ className, onClick, s
   const [recording, setRecording] = useState(false);
   const [myAudioActive, setMyAudioActive] = useState(false);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
+  const [UrlAudio, setUrlAudio] = useState<string | null>(null);
   const [textValue, setTextValue] = useState('');
   const [toggleSound, setToggleSound] = useState(true);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -70,6 +71,7 @@ export const SendMessage: React.FC<ISendMessageProps> = ({ className, onClick, s
         mediaRecorder.onstop = async () => {
           const audioBlob = await fixWebmDuration(new Blob([...chunks], { type: 'audio/wav' }));
           setAudioBlob(audioBlob);
+          setUrlAudio(URL.createObjectURL(audioBlob));
           setMyAudioActive(true);
         };
         mediaRecorder.start();
@@ -159,7 +161,8 @@ export const SendMessage: React.FC<ISendMessageProps> = ({ className, onClick, s
           <VoiceMessage
             type="voice"
             blob={audioBlob as Blob}
-            audioWidth={240}
+            UrlAudio={UrlAudio as string}
+            audioWidth={230}
             barColor={'#2f9b43'}
             barPlayedColor={'#bef574'}
             sizeIcon={28}

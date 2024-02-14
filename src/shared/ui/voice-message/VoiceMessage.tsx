@@ -1,21 +1,22 @@
-import React, { Ref, useEffect, useRef, useState } from 'react';
+import React, { Ref, useEffect, useMemo, useRef, useState } from 'react';
 
 import './voice-message.scss';
 
 import cn from 'classnames';
 import { AudioVisualizer } from 'react-audio-visualize';
-import { handlePlayAudio } from '@/shared/lib';
 import { Button } from '../button/Button';
 import { IoPlayOutline } from 'react-icons/io5';
 import { HiOutlinePause } from 'react-icons/hi2';
-import { handlePauseAudio } from '@/shared/lib/audio/audio';
 import { useMessageStore } from '@/entities/message';
+import { Typography } from '../typography/Typography';
 
 type type = 'text' | 'voice';
 
 interface IMessageProps {
   type: type;
   blob: Blob;
+  UrlAudio: string;
+  index?: string;
   isActive?: boolean;
   className?: string | string[];
   onClick?: () => void;
@@ -33,6 +34,8 @@ export const VoiceMessage: React.FC<IMessageProps> = ({
   type,
   onClick,
   blob,
+  UrlAudio,
+  index = 'none',
   isActive = false,
   audioWidth = 240,
   audioHeight = 30,
@@ -41,81 +44,45 @@ export const VoiceMessage: React.FC<IMessageProps> = ({
   sizeIcon = 25,
   isWithButton = false,
 }) => {
-  const [timeAudio, setTimeAudio] = useState(0);
-  // const [audioElement] = new Audio();
-  // const [audioUrl] = useState(URL.createObjectURL(blob as Blob));
-  const audioElement = useMessageStore((state) => state.audioElement);
-  // const UrlCurrentVoice = useMessageStore((state) => state.UrlCurrentVoice);
-  // const setUrlCurrentVoice = useMessageStore((state) => state.setUrlCurrentVoice);
   const visualizerRef = useRef<HTMLCanvasElement>(null);
-  const UrlCurrentVoice = URL.createObjectURL(blob);
-  const currentAudioElement = new Audio(UrlCurrentVoice);
-  // console.log('---------------->!!activeVoice!', activeVoice);
-  const [toggleSound, setToggleSound] = useState(isActive);
-  console.log('---------------->!!!toggleSound', toggleSound);
-
-  const startVoice = new Event('start');
-
-  // useEffect(() => {
-  //   console.log('---------------->use eccfactiveVoice!', activeVoice);
-  //   setToggleSound(activeVoice);
-  // }, [activeVoice]);
+  const [timeAudio, setTimeAudio] = useState(0);
+  const currentAudioElement = useMemo(() => new Audio(UrlAudio), []);
+  const activeComponentIndex = useMessageStore((state) => state.activeComponentIndex);
+  const setActiveComponentIndex = useMessageStore((state) => state.setActiveComponentIndex);
+  const [toggleSound, setToggleSound] = useState(index === activeComponentIndex);
+  useEffect(() => {
+    currentAudioElement.addEventListener('loadedmetadata', () => {
+      setTimeAudio(currentAudioElement.duration);
+    });
+    currentAudioElement.addEventListener('pause', () => {
+      console.log('---------------->pause event currentAudioElement', currentAudioElement);
+      setToggleSound(false);
+    });
+    return () => {
+      currentAudioElement.removeEventListener('loadedmetadata', () => {});
+      currentAudioElement.removeEventListener('pause', () => {});
+    };
+  }, []);
+  useEffect(() => {
+    if (index !== activeComponentIndex) {
+      setToggleSound(false);
+      currentAudioElement.pause();
+    } else {
+      setToggleSound(true);
+    }
+  }, [activeComponentIndex]);
 
   const playAudio = () => {
-    console.log('---------------->play audioElement', audioElement);
-    // audioElement.src = UrlCurrentVoice;
-    // setToggleSound(isActive);
-    // audioElement.play();
-    audioElement.dispatchEvent(startVoice);
+    setActiveComponentIndex(index);
+    setToggleSound(true);
+    console.log('---------------->play currentAudioElement', currentAudioElement);
     currentAudioElement.play();
   };
   const pauseAudio = () => {
-    audioElement.src = UrlCurrentVoice;
-    console.log('---------------->pause audioElement', audioElement);
-
-    setToggleSound(false);
-    // audioElement.currentTime = 0;
-    // currentAudioElement.pause();
-    console.log('---------------->pause audioElement.currentTime', audioElement.currentTime);
-  };
-  // const stopAudio = () => {
-  //   setToggleSound(true);
-  //   audioElement.currentTime = 0;
-  //   audioElement.pause();
-  //   console.log('---------------->stop audioElement.currentTime', audioElement.currentTime);
-  // };
-
-  // const audioElement = new Audio(audioUrl);
-  currentAudioElement.addEventListener('play', (event) => {
-    console.log('---------------->play audielem event', audioElement);
-    // console.log('---------------->stop audio ended currentAudioElement', currentAudioElement);
-    setToggleSound(true);
-  });
-  audioElement.addEventListener('ended', (event) => {
-    console.log('---------------->stop audio ended', audioElement);
-    // console.log('---------------->stop audio ended currentAudioElement', currentAudioElement);
-    setToggleSound(false);
-  });
-  audioElement.addEventListener('pause', (event) => {
-    console.log('---------------->pause current audio pause');
-    setToggleSound(false);
-  });
-  currentAudioElement.addEventListener('loadedmetadata', function () {
-    setTimeAudio(currentAudioElement.duration);
-  });
-  audioElement.addEventListener('start', function () {
-    console.log('---------------->qq');
-    console.log('---------------->currentAudioElement', currentAudioElement);
-    console.log('---------------->play curent audioElement.src', audioElement.src);
+    console.log('---------------->pause currentAudioElement', currentAudioElement);
     currentAudioElement.pause();
     setToggleSound(false);
-    // if (currentAudioElement.src !== audioElement.src) {
-    //   audioElement.src = currentAudioElement.src;
-    //   console.log('---------------->2play curent audioElement.src', audioElement.src);
-    // }
-    // audioElement.src = currentAudioElement.src;
-    // currentAudioElement.play();
-  });
+  };
   return (
     <div className={cn('message', type, className)} onClick={onClick}>
       {isWithButton ? null : toggleSound ? (
@@ -138,8 +105,8 @@ export const VoiceMessage: React.FC<IMessageProps> = ({
           barColor={barColor}
           barPlayedColor={barPlayedColor}
         />
+        <Typography type="text-sm">{timeAudio.toFixed(0)}c</Typography>
       </div>
-      <div>{timeAudio}</div>
     </div>
   );
 };

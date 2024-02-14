@@ -14,23 +14,26 @@ interface IMessagesProps {
 }
 export const Messages: React.FC<IMessagesProps> = ({ className, onClick }) => {
   const messages = useMessageStore((state) => state.message);
-  const [activeComponentIndex, setActiveComponentIndex] = useState(-1);
-  const handleComponentClick = (i: number) => {
-    setActiveComponentIndex(i);
-  };
+  // const [activeComponentIndex, setActiveComponentIndex] = useState(-1);
+  // const handleComponentClick = (i: number) => {
+  //   setActiveComponentIndex(i);
+  // };
 
   return (
     <div className={cn('messages', className)} onClick={onClick}>
       {messages.map((msg, i) => {
         if (typeof msg.text !== 'string') {
           const blob = new Blob([msg.text], { type: 'audio/wav' });
+          const UrlAudio = URL.createObjectURL(blob);
           return (
             <Signature type={'default'} date={msg.date} nameSender={msg.nickName} key={uuid()}>
               <VoiceMessage
                 // isActive={i === activeComponentIndex}
                 type="voice"
                 blob={blob}
+                UrlAudio={UrlAudio}
                 key={uuid()}
+                index={uuid()}
                 // onClick={() => handleComponentClick(i)}
               />
             </Signature>

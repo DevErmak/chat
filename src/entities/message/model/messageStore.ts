@@ -9,6 +9,7 @@ export const useMessageStore = create<IMessageState>()(
       message: [],
       voice: [],
       UrlCurrentVoice: '',
+      activeComponentIndex: '',
       activeVoice: false,
       audioElement: new Audio(),
       isLoading: false,
@@ -38,6 +39,10 @@ export const useMessageStore = create<IMessageState>()(
       setActiveVoice: (isActive: boolean) =>
         set((state) => {
           state.activeVoice = isActive;
+        }),
+      setActiveComponentIndex: (id: string) =>
+        set((state) => {
+          state.activeComponentIndex = id;
         }),
     })),
   ),
