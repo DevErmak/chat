@@ -31,7 +31,6 @@ export const SendMessage: React.FC<ISendMessageProps> = ({ className, onClick, s
   const [textValue, setTextValue] = useState('');
   const [toggleSound, setToggleSound] = useState(true);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const visualizerRef = useRef<HTMLCanvasElement>(null);
 
   const [widthMsgVisual, setWidthMsgVisual] = useState<number>();
   const messageVisualRef = useRef<HTMLDivElement>(null);
